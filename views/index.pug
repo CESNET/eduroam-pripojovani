@@ -1,5 +1,65 @@
 extends layout
 
 block content
-  h1= title
-  p Welcome to #{title}
+  script.
+    var data = !{JSON.stringify(data)};
+
+  div(ng-controller="index_controller")
+    form
+
+      label Vybrat
+      select(ng-model='orgs_filter')
+        each key, val in {"pouze připojující se" : "připojuje se", "připojené" : "připojeno", "odpojené" : "odpojeno", "všechny" : ""}
+          option(value = key) #{val}
+
+
+      label Způsob řazení
+      select(ng-model='sort_type')
+        each key, val in {"abecedně" : "org_name", "podle data připojení" : "connection_timestamp", "podle data registarace" : "register_timestamp", "podle změn" : "last_change"}
+          option(value = key) #{val}
+
+      input(type="checkbox" ng-model='reverse_sort')
+      | Obrátit směr řazení
+
+    table
+      thead
+        tr
+          th Název organizace:
+          th Realmy organizace:
+          th Správci:
+          th Typ připojení:
+          th Registrováno od:
+          th Připojeno od:
+          th Testovací uživatel:
+          th Informace o pokrytí:
+          th Stav připojení:
+          th Datum poslední změny:
+          th Beze změny:
+      tbody
+        tr(ng-repeat="row in data | filter : { connection_status : orgs_filter } | orderBy: sort_type : reverse_sort")
+          td {{row.org_name}}
+          td
+            ul.list-inline
+              li(ng-repeat='realm in row.realms')
+                | {{realm}}
+          td
+            ul.list-inline
+              li(ng-repeat='manager in row.managers track by $index')
+                | {{row.managers[$index]}}
+          td {{row.type}}
+          td {{row.register_date}}
+          td {{row.connection_date}}
+          td {{row.testing_id}}
+          td {{row.xml_url}}
+          td {{row.connection_status}}
+          td {{row.last_change_date}}
+          td {{row.without_changes}}
+
+
+
+
+
+
+          //- TODO - bude to chtit razeni podle sloupce, jak dlouho je to nezmenene
+          //- TODO - obratit implicitni smer razeni?
+          //- TODO - nejake vyhlevaci pole?
