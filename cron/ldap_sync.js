@@ -18,12 +18,12 @@ exp.synchronize_data = function (database) {
     assert.ifError(err)
   })
 
-  search_realms(client, database);
+  exp.search_and_update_realms(client, database, config.search_base_realms);
 };
 // --------------------------------------------------------------------------------------
 // search ldap for realms
 // --------------------------------------------------------------------------------------
-function search_realms(client, database)
+exp.search_and_update_realms = function (client, database, search_base, callback)
 {
   // items which are registered for each realm
   var items = [ 'dn', 'cn', 'eduroamConnectionStatus', 'eduroamMemberType', 'manager', 'eduroamTestingId', 'labeledUri', 'oPointer', 'eduroamConnected', 'eduroamRegistered' ];
@@ -35,7 +35,7 @@ function search_realms(client, database)
     attributes: items
   };
 
-  client.search(config.search_base_realms, opts, function(err, res) {
+  client.search(search_base, opts, function(err, res) {
     assert.ifError(err);
 
     res.on('searchEntry', function(entry) {
@@ -80,9 +80,13 @@ function search_realms(client, database)
 
     res.on('end', function(result) {
       search_radius_servers(client, ret, database, function() {
-        search_orgs(client, ret, database, function(data) {
-          search_managers(client, data, database);
-          update_realms(data, database);
+        search_orgs(client, ret, database, function() {
+          search_managers(client, ret, database, function() {
+            update_realms(ret, database, function() {
+              if(callback)
+                callback();
+            });
+          });
         });
       });
     });
@@ -91,7 +95,7 @@ function search_realms(client, database)
 // --------------------------------------------------------------------------------------
 // update realms collection in database
 // --------------------------------------------------------------------------------------
-function update_realms(data, database)
+function update_realms(data, database, done)
 {
   async.each(data, function(item, callback) {
     database.realms.aggregate([{ $match : { dn: item.dn } },        // match item by dn
@@ -99,21 +103,25 @@ function update_realms(data, database)
                                { $limit : 1 }                       // get only the newest record
     ],
       function(err, results) {
+
         if(results.length > 0) {   // something found
 
           // compare record for insertion and the database record, if they differ, insert record
-          if(compare_records(results[0], item)) {
+          if(compare_records(results[0], item)) {   // records differ
 
-            database.realms.update({ dn : item.dn, last_change : item.last_change}, item, { upsert : true },        // nothing matches search criteria, this is actually an insert
+            database.realms.update({ dn : item.dn, last_change : item.last_change }, item, { upsert : true },        // nothing matches search criteria, this is actually an insert
             function(err, result) {
               if(err)
                 console.error(err);
               callback();
             });
           }
+          else {        // records do not differ, not necessary to update
+            callback();
+          }
         }
         else {                     // nothing found, insert new data
-          database.realms.update({ dn : item.dn, last_change : item.last_change}, item, { upsert : true },        // nothing matches search criteria, this is actually an insert
+          database.realms.update({ dn : item.dn, last_change : item.last_change }, item, { upsert : true },        // nothing matches search criteria, this is actually an insert
           function(err, result) {
             if(err)
               console.error(err);
@@ -123,7 +131,8 @@ function update_realms(data, database)
     });
   }, function(err) {
       if(err)
-    console.log(err);
+        console.log(err);
+      done();
   });
 }
 // --------------------------------------------------------------------------------------
@@ -155,18 +164,19 @@ function compare_records(a, b)
 // --------------------------------------------------------------------------------------
 // search ldap for managers
 // --------------------------------------------------------------------------------------
-function search_managers(client, data, database)
+function search_managers(client, data, database, done)
 {
+  var opts = {
+    scope: 'sub',
+    attributes: [ 'uid', 'cn' ]
+  };
   var ret = [];
 
-  for(var item in data) {
-    for(var manager in data[item]['managers']) {
-      var opts = {
-	scope: 'sub',
-	attributes: [ 'uid', 'cn' ]
-      };
+  async.each(data, function(item, callback1) {      // iterate data
 
-      client.search(data[item]['managers'][manager], opts, function(err, res) {
+    async.each(item['managers'], function(item, callback2) {  // iterate managers for one item
+
+      client.search(item, opts, function(err, res) {
         assert.ifError(err);
 
         res.on('searchEntry', function(entry) {
@@ -181,23 +191,38 @@ function search_managers(client, data, database)
         });
 
         res.on('end', function(result) {
-          update_managers(ret, database);
+          callback2();       // item done
         });
       });
-    }
-  }
+
+    }, function(err) {
+        if(err)
+          console.log(err);
+        callback1();    // all managers for one item done
+    });
+
+  }, function(err) {
+      if(err)
+        console.log(err);
+      update_managers(ret, database, done);   // all items done
+  });
 }
 // --------------------------------------------------------------------------------------
 // update managers collection in database
 // --------------------------------------------------------------------------------------
-function update_managers(data, database)
+function update_managers(data, database, done)
 {
-  for(var i in data) {
-    database.managers.update({ dn: data[i].dn }, data[i], { upsert : true },
+  async.each(data, function(item, callback) {
+    database.managers.update({ dn: item.dn }, item, { upsert : true },
     function(err, result) {
       // no error reporting here
+      callback();   // item updated
     });
-  }
+  }, function(err) {
+      if(err)
+        console.log(err);
+      done();		// all items are done
+  });
 }
 // --------------------------------------------------------------------------------------
 // search ldap for radius servers
@@ -236,7 +261,7 @@ function search_radius_servers(client, data, database, done)
     });
   }, function(err) {
       if(err)
-	console.log(err);
+        console.log(err);
       done();		// all items are done
   });
 }
@@ -275,7 +300,7 @@ function search_orgs(client, data, database, done)
   }, function(err) {
       if(err)
         console.log(err);
-      done(data);		// all items are done
+      done();		// all items are done
   });
 }
 // --------------------------------------------------------------------------------------
