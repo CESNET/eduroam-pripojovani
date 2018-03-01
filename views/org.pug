@@ -1,0 +1,147 @@
+extends layout
+
+block content
+  script.
+    var data = !{JSON.stringify(data)};
+
+  p
+    | Zapojení organizace do eduroamu je komplexní úkon, níže uvedená tabulka uvádí stav jednotlivých dílčích kroků. Pokud je organizace povinna dodat #[a(href="https://www.eduroam.cz/cs/spravce/pripojovani/spravci#prohlaseni_zadatele_o_clenstvi_v_ceske_eduroam_federaci") Prohlášení] nemusí čekat na jeho doručení na CESNET a může pokračovat v plnění dalších kroků.
+  p
+    | TODO - stav registarace organizace bude vzdy ano? ne, musi to zvladnout kdy nekdo manipuluje s URL
+
+  div(ng-controller="org_controller")
+
+    h3 Aktuální stav
+
+    table.table.striped.hovered
+      thead
+        tr
+          th
+          th Stav
+          th Vysvětlení
+          th Dokumentace
+      tbody
+
+        tr
+          td Registrace organizace
+          td.bg-green ano
+          td Informace o realmu, RADIUS serveru a jmenování správců bylo doručeno a zaevidováno na CESNETu.
+          td
+            a(href="https://www.eduroam.cz/cs/spravce/pripojovani/spravci") Dokumentace k registraci
+
+        tr
+          td Dodané prohlášení
+          td TODO
+          td Organizace je připojena k CESNETu dodatečné administrativa se jí netýká. | Organizace dodala "Prohlášení žadatele o členství v české eduroam federaci". | Čekáme na dodání "Prohlášení žadatele o členství v české eduroam federaci".
+          td
+            a(href="https://www.eduroam.cz/cs/spravce/pripojovani/spravci#prohlaseni_zadatele_o_clenstvi_v_ceske_eduroam_federaci") Dokumentace k prohlášení
+
+        tr
+          td RADIUS server
+          td.bg-green(ng-if='data[0].radius == "ano"') {{data[0].radius}}
+          td(ng-if='data[0].radius == "ano"') RADIUS server je definován.
+
+          td.bg-lightRed(ng-if='data[0].radius != "ano"') {{data[0].radius}}
+          td(ng-if='data[0].radius != "ano"') RADIUS server není definován. Každá zapojená organizace musí mít k dispozici RADIUS server, který bude obsluhovat autentizační požadavky.
+          td
+            a(href="https://www.eduroam.cz/cs/spravce/pripojovani/radius/uvod") Dokumentace k RADIUS serveru
+
+        tr
+          td Testovací uživatel
+          td.bg-green(ng-if='data[0].testing_id == "ano"') {{data[0].testing_id}}
+          td(ng-if='data[0].testing_id == "ano"') Testovací uživatel byl dodán.
+
+          td.bg-lightRed(ng-if='data[0].testing_id != "ano"') {{data[0].testing_id}}
+          td(ng-if='data[0].testing_id != "ano"') Testovací uživatel nebyl dodán. Každá připojená organizace je povinna dodat trvale funkční testovací účet.
+
+          td
+            a(href="https://www.eduroam.cz/cs/spravce/pripojovani/testovaci_ucet") Dokumentace k testovacímu účtu
+
+        tr
+          td Informace o pokrytí
+          td.bg-green(ng-if='data[0].xml_url == "ano"') {{data[0].xml_url}}
+          td(ng-if='data[0].xml_url == "ano"') Informace o pokrytí jsou dostupné.
+
+          td.bg-lightRed(ng-if='data[0].xml_url != "ano"') {{data[0].xml_url}}
+          td(ng-if='data[0].xml_url != "ano"') Informace o pokrytí nejsou dostupné. Informace o pokrytí jsou předávány skrze XML soubor na webu organizace.
+
+          td
+            a(href="https://www.eduroam.cz/cs/spravce/edudb/institution_xml") Dokumentace k pokrytí
+
+        tr
+          td Připojeno k eduroam.cz
+          td.bg-green(ng-if='data[0].connection_status == "připojeno"') {{data[0].connection_status}}
+          td(ng-if='data[0].connection_status == "připojeno"') Úspěšně připojeno k eduroam.cz.
+
+          td.bg-orange(ng-if='data[0].connection_status == "připojuje se"') {{data[0].connection_status}}
+          td(ng-if='data[0].connection_status == "připojuje se"') Probíhá připojování k eduroam.cz. K úspěšnému dokončení připojování musí být splněny všechny dílčí admistrativní kroky a musí projít všechny povinné technické testy.
+
+          td.bg-lightRed(ng-if='data[0].connection_status == "odpojeno"') {{data[0].connection_status}}
+          td(ng-if='data[0].connection_status == "odpojeno"') Dočasně odpojedno od eduroam.cz z technicko-administativních důvodů.
+
+          td
+            a(href="https://www.eduroam.cz/cs/spravce/pripojovani/uvod") Dokumentace k připojení
+
+
+
+
+    h3 Historie změn
+
+    table.table.striped.hovered
+      thead
+        tr
+          th Realmy organizace
+          th Správci
+          th Typ připojení
+          th 
+            | Registrováno </br> 
+            | Připojeno </br> 
+            | Jmenování
+          th Testovací uživatel
+          th Informace o pokrytí
+          th Stav připojení
+          th Datum změny
+      tbody
+        tr(ng-repeat="row in data track by $index", ng-if='$index > 0')
+          td.realms
+            ul
+              li(ng-repeat='realm in row.realms')
+                | {{realm}}
+
+          td.managers
+            ul
+              li(ng-repeat='manager in row.managers track by $index')
+                | {{row.managers[$index]}}
+
+          td(ng-if='row.type == "SP"' data-balloon="Zkratka SP znamená, že tento realm neověřuje vlastní uživatele." data-balloon-pos="up") {{row.type}}
+          td(ng-if='row.type != "SP"' data-balloon="Zkratka IdP+SP znamená, že tento realm ověřuje vlastní uživatele." data-balloon-pos="up") {{row.type}}
+
+          //- TODO - treti datum
+          td.bg-lightRed(ng-if='row.register_date === undefined || row.connection_date === undefined')
+            ul
+              li
+                | {{ row.register_date }}
+              li
+                | {{ row.connection_date }}
+
+          td.date(ng-if='row.register_date !== undefined && row.connection_date !== undefined')
+            ul
+              li
+                | {{ row.register_date }}
+              li
+                | {{ row.connection_date }}
+
+          td.bg-green(ng-if='row.testing_id == "ano"') {{row.testing_id}}
+          td.bg-lightRed(ng-if='row.testing_id != "ano"') {{row.testing_id}}
+
+          td.bg-green(ng-if='row.xml_url == "ano"') {{row.xml_url}}
+          td.bg-lightRed(ng-if='row.xml_url != "ano"') {{row.xml_url}}
+
+          td.bg-green(ng-if='row.connection_status == "připojeno"') {{row.connection_status}}
+          td.bg-orange(ng-if='row.connection_status == "připojuje se"') {{row.connection_status}}
+          td.bg-lightRed(ng-if='row.connection_status == "odpojeno"') {{row.connection_status}}
+
+          td.date {{row.last_change_date}}
+
+
+
