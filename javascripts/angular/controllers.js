@@ -91,16 +91,35 @@ function transform_values(data)
   };
 
   for(var item in data) {
+
     // transform values to Czech
     data[item]['connection_status'] = connection[data[item]['connection_status']];
     data[item]['testing_id'] = bool[data[item]['testing_id']];
     data[item]['radius'] = bool[data[item]['radius']];
     data[item]['xml_url'] = bool[data[item]['xml_url']];
 
+    // -----------------------------------
+
     if(data[item]['type'] == 'IdPSP') // change to IdP+SP
       data[item]['type'] = 'IdP+SP';
     else    // SP only
       data[item]['testing_id'] = 'n/a';     // set testing user to n/a
+
+    // -----------------------------------
+
+    if(data[item].org_active == true) {     // org is active
+      data[item].appointment_delivered = 'n/a';       // no appointment needed if org is active
+    }
+
+    else {                                  // org is not active [ org.active == false or null ]
+      if(data[item].appointment === undefined || data[item].appointment === null)      // no appointment information exists
+        data[item]['appointment_delivered'] = 'ne'
+      else {                                        // appointment was delivered
+        data[item]['appointment_date'] = new Date(data[item]['appointment']);
+        data[item]['appointment_date'] = convert_to_local_date_string(data[item]['appointment_date']);
+        data[item]['appointment_delivered'] = 'ano'
+      }
+    }
   }
 
   return data;
