@@ -102,7 +102,7 @@ block content
           td(ng-if='row.radius == "ano"') {{row.radius}}
           td.red_color(ng-if='row.radius != "ano"') {{row.radius}}
 
-          td {{row.connection_status}}
+          td.nowrap {{row.connection_status}}
 
           td(ng-if='row.connection_status == "připojeno"') n/a
           td(ng-if='row.connection_status != "připojeno"') {{row.without_changes}}
