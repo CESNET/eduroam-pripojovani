@@ -7,7 +7,6 @@ block content
   p
     | Zapojení organizace do eduroamu je komplexní úkon, níže uvedená tabulka uvádí stav jednotlivých dílčích kroků. Pokud je organizace povinna dodat #[a(href="https://www.eduroam.cz/cs/spravce/pripojovani/spravci#prohlaseni_zadatele_o_clenstvi_v_ceske_eduroam_federaci") Prohlášení] nemusí čekat na jeho doručení na CESNET a může pokračovat v plnění dalších kroků.
   p
-    | TODO - stav registarace organizace bude vzdy ano? ne, musi to zvladnout kdy nekdo manipuluje s URL
 
   div(ng-controller="org_controller")
 
@@ -22,54 +21,100 @@ block content
           th Dokumentace
       tbody
 
+        //----------------------------------------------------------------------------------------
+
         tr
           td Registrace organizace
-          td.bg-green ano
-          td Informace o realmu, RADIUS serveru a jmenování správců bylo doručeno a zaevidováno na CESNETu.
+          td.bg-green(ng-if='data.length > 0') ano
+          td(ng-if='data.length > 0') Informace o realmu, RADIUS serveru a jmenování správců bylo doručeno a zaevidováno na CESNETu.
+
+          td.bg-lightRed(ng-if='data.length == 0') ne
+          td(ng-if='data.length == 0') Informace o realmu, RADIUS serveru a jmenování správců nejsou k dispozici.
+
           td
             a(href="https://www.eduroam.cz/cs/spravce/pripojovani/spravci") Dokumentace k registraci
 
+
+        //----------------------------------------------------------------------------------------
+
         tr
           td Dodané prohlášení
-          td TODO
-          td Organizace je připojena k CESNETu dodatečné administrativa se jí netýká. | Organizace dodala "Prohlášení žadatele o členství v české eduroam federaci". | Čekáme na dodání "Prohlášení žadatele o členství v české eduroam federaci".
+
+          td.bg-green(ng-if='data[0].appointment_delivered == "n/a"') {{data[0].appointment_delivered}}
+          td(ng-if='data[0].appointment_delivered == "n/a"') Organizace je připojena k CESNETu. Dodatečná administrativa se jí netýká.
+
+          td.bg-green(ng-if='data[0].appointment_delivered == "ano"') {{data[0].appointment_delivered}} {{data[0].appointment_date}}
+          td(ng-if='data[0].appointment_delivered == "ano"') Organizace dodala "Prohlášení žadatele o členství v české eduroam federaci".
+
+          td.bg-lightRed(ng-if='data[0].appointment_delivered == "ne"') {{data[0].appointment_delivered}}
+          td(ng-if='data[0].appointment_delivered == "ne"') Čekáme na dodání "Prohlášení žadatele o členství v české eduroam federaci".
+
+          td.bg-lightRed(ng-if='data.length == 0') ne
+          td(ng-if='data.length == 0') Čekáme na dodání "Prohlášení žadatele o členství v české eduroam federaci".
+
           td
             a(href="https://www.eduroam.cz/cs/spravce/pripojovani/spravci#prohlaseni_zadatele_o_clenstvi_v_ceske_eduroam_federaci") Dokumentace k prohlášení
 
+
+        //----------------------------------------------------------------------------------------
+
         tr
           td RADIUS server
+
           td.bg-green(ng-if='data[0].radius == "ano"') {{data[0].radius}}
           td(ng-if='data[0].radius == "ano"') RADIUS server je definován.
 
-          td.bg-lightRed(ng-if='data[0].radius != "ano"') {{data[0].radius}}
+          td.bg-lightRed(ng-if='data[0].radius != "ano" && data.length > 0') {{data[0].radius}}
+          td.bg-lightRed(ng-if='data[0].radius != "ano" && data.length == 0') ne
+
           td(ng-if='data[0].radius != "ano"') RADIUS server není definován. Každá zapojená organizace musí mít k dispozici RADIUS server, který bude obsluhovat autentizační požadavky.
+
+
           td
             a(href="https://www.eduroam.cz/cs/spravce/pripojovani/radius/uvod") Dokumentace k RADIUS serveru
 
+
+        //----------------------------------------------------------------------------------------
+
         tr
           td Testovací uživatel
+
           td.bg-green(ng-if='data[0].testing_id == "ano"') {{data[0].testing_id}}
           td(ng-if='data[0].testing_id == "ano"') Testovací uživatel byl dodán.
 
-          td.bg-lightRed(ng-if='data[0].testing_id != "ano"') {{data[0].testing_id}}
+          td.bg-lightRed(ng-if='data[0].testing_id != "ano" && data.length > 0') {{data[0].testing_id}}
+          td.bg-lightRed(ng-if='data[0].testing_id != "ano" && data.length == 0') ne
+
           td(ng-if='data[0].testing_id != "ano"') Testovací uživatel nebyl dodán. Každá připojená organizace je povinna dodat trvale funkční testovací účet.
 
           td
             a(href="https://www.eduroam.cz/cs/spravce/pripojovani/testovaci_ucet") Dokumentace k testovacímu účtu
 
+
+        //----------------------------------------------------------------------------------------
+
+
         tr
           td Informace o pokrytí
+
           td.bg-green(ng-if='data[0].xml_url == "ano"') {{data[0].xml_url}}
           td(ng-if='data[0].xml_url == "ano"') Informace o pokrytí jsou dostupné.
 
-          td.bg-lightRed(ng-if='data[0].xml_url != "ano"') {{data[0].xml_url}}
+          td.bg-lightRed(ng-if='data[0].xml_url != "ano" && data.length > 0') {{data[0].xml_url}}
+          td.bg-lightRed(ng-if='data[0].xml_url != "ano" && data.length == 0') ne
+
           td(ng-if='data[0].xml_url != "ano"') Informace o pokrytí nejsou dostupné. Informace o pokrytí jsou předávány skrze XML soubor na webu organizace.
 
           td
             a(href="https://www.eduroam.cz/cs/spravce/edudb/institution_xml") Dokumentace k pokrytí
 
+
+        //----------------------------------------------------------------------------------------
+
+
         tr
           td Připojeno k eduroam.cz
+
           td.bg-green(ng-if='data[0].connection_status == "připojeno"') {{data[0].connection_status}}
           td(ng-if='data[0].connection_status == "připojeno"') Úspěšně připojeno k eduroam.cz.
 
@@ -79,9 +124,16 @@ block content
           td.bg-lightRed(ng-if='data[0].connection_status == "odpojeno"') {{data[0].connection_status}}
           td(ng-if='data[0].connection_status == "odpojeno"') Dočasně odpojedno od eduroam.cz z technicko-administativních důvodů.
 
+          td.bg-lightRed(ng-if='data.length == 0') odpojeno
+          td(ng-if='data.length == 0') Není připojeno k eduroam.cz.
+
           td
             a(href="https://www.eduroam.cz/cs/spravce/pripojovani/uvod") Dokumentace k připojení
 
+
+        //----------------------------------------------------------------------------------------
+        //----------------------------------------------------------------------------------------
+        //----------------------------------------------------------------------------------------
 
 
 
