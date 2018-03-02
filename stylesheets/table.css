@@ -1,12 +1,4 @@
-td.realms {
-  white-space: nowrap;
-}
-
-td.managers {
-  white-space: nowrap;
-}
-
-td.date {
+td.nowrap {
   white-space: nowrap;
 }
 
@@ -23,7 +15,7 @@ ul li {
   padding-left:0;
 }
 
-li.date {
+li.nowrap {
   white-space: nowrap;
 }
 

@@ -64,12 +64,12 @@ block content
           td(ng-if='row.org_name !== undefined')
             a(href="/{{row.realms[0]}}") {{row.org_name}}
 
-          td.realms
+          td.norwap
             ul
               li(ng-repeat='realm in row.realms')
                 | {{realm}}
 
-          td.managers
+          td.nowrap
             ul
               li(ng-repeat='manager in row.managers track by $index')
                 | {{row.managers[$index]}}
@@ -89,7 +89,7 @@ block content
               li(ng-if='row.org_active == true' data-balloon="Prohlášení není vyžadováno.") {{row.appointment_delivered}}
 
               //- no line breaking here
-              li.date(ng-if='row.org_active != true && row.appointment_delivered == "ano"') {{row.appointment_delivered}} {{row.appointment_date}}
+              li.nowrap(ng-if='row.org_active != true && row.appointment_delivered == "ano"') {{row.appointment_delivered}} {{row.appointment_date}}
               li.red_color(ng-if='row.org_active != true && row.appointment_delivered != "ano"') {{row.appointment_delivered}}
 
           td(ng-if='row.testing_id == "ano"') {{row.testing_id}}
