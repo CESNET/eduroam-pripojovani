@@ -1,0 +1,36 @@
+td.realms {
+  white-space: nowrap;
+}
+
+td.managers {
+  white-space: nowrap;
+}
+
+td.date {
+  white-space: nowrap;
+}
+
+ul {
+  display:table-row;
+  list-style:none;
+  padding-left:0;
+}
+
+ul li {
+  vertical-align:top
+  display: table-cell;
+  list-style:none;
+  padding-left:0;
+}
+
+li.date {
+  white-space: nowrap;
+}
+
+td {
+  vertical-align:top
+}
+
+th {
+  vertical-align:top
+}
