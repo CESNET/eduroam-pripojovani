@@ -29,12 +29,13 @@ function add_timestamps(data)
     data[item]['last_change_date'] = new Date(data[item]['last_change']);
     data[item]['last_change_date'] = convert_to_local_date_string(data[item]['last_change_date']);
 
-    if(data[item]['connection_status'] != 'connected') {     // only apply for not connected
-      data[item]['without_changes'] = (new Date().getTime() - new Date(data[item]['last_change']).getTime()) / 1000;
-      data[item]['without_changes'] = dhm_string(data[item]['without_changes']);
-    }
-    else
-      data[item]['without_changes'] = 'n/a';
+    data[item]['last_change_date'] = new Date(data[item]['last_change']);
+    data[item]['last_change_date'] = convert_to_local_date_string(data[item]['last_change_date']);
+
+    // for connected orgs this is not displayed
+    // so this is actually only for sorting all orgs
+    data[item]['without_changes'] = (new Date().getTime() - new Date(data[item]['last_change']).getTime()) / 1000;
+    data[item]['without_changes'] = dhm_string(data[item]['without_changes']);
   }
 }
 // --------------------------------------------------------------------------------------
