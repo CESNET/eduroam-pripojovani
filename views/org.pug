@@ -118,7 +118,7 @@ block content
           td.bg-green(ng-if='data[0].connection_status == "připojeno"') {{data[0].connection_status}}
           td(ng-if='data[0].connection_status == "připojeno"') Úspěšně připojeno k eduroam.cz.
 
-          td.bg-orange(ng-if='data[0].connection_status == "připojuje se"') {{data[0].connection_status}}
+          td.nowrap.bg-orange(ng-if='data[0].connection_status == "připojuje se"') {{data[0].connection_status}}
           td(ng-if='data[0].connection_status == "připojuje se"') Probíhá připojování k eduroam.cz. K úspěšnému dokončení připojování musí být splněny všechny dílčí admistrativní kroky a musí projít všechny povinné technické testy.
 
           td.bg-lightRed(ng-if='data[0].connection_status == "odpojeno"') {{data[0].connection_status}}
@@ -155,12 +155,12 @@ block content
           th Datum změny
       tbody
         tr(ng-repeat="row in data track by $index", ng-if='$index > 0')
-          td.realms
+          td.nowrap
             ul
               li(ng-repeat='realm in row.realms')
                 | {{realm}}
 
-          td.managers
+          td.nowrap
             ul
               li(ng-repeat='manager in row.managers track by $index')
                 | {{row.managers[$index]}}
@@ -193,7 +193,7 @@ block content
           td.bg-orange(ng-if='row.connection_status == "připojuje se"') {{row.connection_status}}
           td.bg-lightRed(ng-if='row.connection_status == "odpojeno"') {{row.connection_status}}
 
-          td.date {{row.last_change_date}}
+          td.nowrap {{row.last_change_date}}
 
 
 
