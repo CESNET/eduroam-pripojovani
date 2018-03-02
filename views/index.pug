@@ -27,6 +27,10 @@ block content
       label.clickable(for='reverse_sort') Obrátit směr řazení
       input#reverse_sort(type="checkbox" ng-model='reverse_sort')
 
+
+        //----------------------------------------------------------------------------------------
+
+
     table.table.striped.hovered
       thead
         tr
@@ -37,7 +41,7 @@ block content
           th
             | Registrováno </br>
             | Připojeno </br>
-            | Jmenování
+            | Prohlášení
           th Testovací uživatel
           th Informace o pokrytí
           th RADIUS server
@@ -46,6 +50,11 @@ block content
           //-th Datum poslední změny
 
           th Beze změny
+
+
+        //----------------------------------------------------------------------------------------
+
+
       tbody
         tr(ng-repeat="row in data | filter : { connection_status : orgs_connection_filter, org_name : orgs_name_filter } | orderBy: sort_type : reverse_sort")
 
@@ -68,30 +77,32 @@ block content
           td(ng-if='row.type == "SP"' data-balloon="Zkratka SP znamená, že organizace poskytuje eduroam konektivitu ale nemá vlastní uživatele." data-balloon-pos="up") {{row.type}}
           td(ng-if='row.type != "SP"' data-balloon="Zkratka IdP+SP znamená, že organizace má vlastní uživatele a poskytuje eduroam konektivitu." data-balloon-pos="up") {{row.type}}
 
-          //- TODO - treti datum
-          td.red_color(ng-if='row.register_date === undefined || row.connection_date === undefined')
+
+          td
             ul
-              li
-                | {{ row.register_date }}
-              li
-                | {{ row.connection_date }}
+              li.red_color(ng-if='row.register_date === undefined') ??
+              li(ng-if='row.register_date !== undefined') {{ row.register_date }}
 
-          td.date(ng-if='row.register_date !== undefined && row.connection_date !== undefined')
-            ul
-              li
-                | {{ row.register_date }}
-              li
-                | {{ row.connection_date }}
+              li.red_color(ng-if='row.connection_date === undefined') ??
+              li(ng-if='row.connection_date !== undefined') {{ row.connection_date }}
 
-          td {{row.testing_id}}
-          td {{row.xml_url}}
+              li(ng-if='row.org_active == true') {{row.appointment_delivered}}
 
-          td.red_color(ng-if='row.radius === undefined') {{row.radius}}
-          td(ng-if='row.radius !== undefined') {{row.radius}}
+              //- no line breaking here
+              li.date(ng-if='row.org_active != true && row.appointment_delivered == "ano"') {{row.appointment_delivered}} {{row.appointment_date}}
+              li.red_color(ng-if='row.org_active != true && row.appointment_delivered != "ano"') {{row.appointment_delivered}}
+
+          td(ng-if='row.testing_id == "ano" || row.testing_id == "n/a"') {{row.testing_id}}
+          td.red_color(ng-if='row.testing_id == "ne"') {{row.testing_id}}
+
+          td(ng-if='row.xml_url == "ano"') {{row.xml_url}}
+          td.red_color(ng-if='row.xml_url != "ano"') {{row.xml_url}}
+
+          td(ng-if='row.radius == "ano"') {{row.radius}}
+          td.red_color(ng-if='row.radius != "ano"') {{row.radius}}
 
           td {{row.connection_status}}
 
-          //-td.date {{row.last_change_date}}
-
-          td {{row.without_changes}}
+          td(ng-if='row.connection_status == "připojeno"') n/a
+          td(ng-if='row.connection_status != "připojeno"') {{row.without_changes}}
 
