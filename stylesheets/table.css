@@ -26,3 +26,9 @@ td {
 th {
   vertical-align:top
 }
+
+.sticky_header {
+  position: sticky;
+  top: 0;
+  background-color: white;
+}
