@@ -26,7 +26,7 @@ exp.synchronize_data = function (database) {
 exp.search_and_update_realms = function (client, database, search_base, callback)
 {
   // items which are registered for each realm
-  var items = [ 'dn', 'cn', 'eduroamConnectionStatus', 'eduroamMemberType', 'manager', 'eduroamTestingId', 'labeledUri', 'oPointer', 'eduroamConnected', 'eduroamRegistered' ];
+  var items = [ 'dn', 'cn', 'eduroamConnectionStatus', 'eduroamMemberType', 'manager', 'eduroamTestingId', 'labeledUri', 'oPointer', 'eduroamConnected', 'eduroamRegistered', 'eduroamAppointmentDelivered' ];
   var ret = [];
 
   var opts = {
@@ -71,11 +71,15 @@ exp.search_and_update_realms = function (client, database, search_base, callback
 
       dict.last_change = new Date();
 
+      if(entry.object['eduroamAppointmentDelivered'])
+        dict.appointment = ldap2date.parse(entry.object['eduroamAppointmentDelivered']);
+
       ret.push(dict);		// prepare results for database update
     });
 
     res.on('error', function(err) {
       console.error('error: ' + err.message);
+      callback();
     });
 
     res.on('end', function(result) {
@@ -274,7 +278,7 @@ function search_orgs(client, data, database, done)
     if(item['org_ptr'] != undefined) {		// org pointer is defined
       var opts = {
         scope: 'base',
-        attributes: [ 'o;lang-cs' ]
+        attributes: [ 'o;lang-cs', 'cesnetActive' ]
       };
 
       client.search(item['org_ptr'], opts, function(err, res) {		// use pointer as search base
@@ -283,6 +287,17 @@ function search_orgs(client, data, database, done)
         res.on('searchEntry', function(entry) {
           if(entry.object['o;lang-cs']) {
             data[index]['org_name'] = entry.object['o;lang-cs'];
+          }
+
+          if(entry.object['cesnetActive']) {
+            if(entry.object['cesnetActive'] == "TRUE")
+              data[index]['org_active'] = true;
+
+            else if(entry.object['cesnetActive'] == "FALSE")
+              data[index]['org_active'] = false;
+
+            else           // otherwise undefined
+              data[index]['org_active'] = undefined;        // this is actually saved as null in the database!
           }
         });
 
