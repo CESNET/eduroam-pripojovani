@@ -13,6 +13,8 @@ const database = require( './db' );
 var app = express();
 
 // --------------------------------------------------------------------------------------
+// disable powered by header
+app.disable('x-powered-by')
 
 // connect to the database
 database.connect();
