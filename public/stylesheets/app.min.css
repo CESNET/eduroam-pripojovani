@@ -33,6 +33,11 @@ th {
   vertical-align:top
 }
 
+.sticky_header {
+  position: sticky;
+  top: 0;
+  background-color: white;
+}
 
 .main {
   border-top: 12px solid #00658d;
