@@ -223,7 +223,7 @@ h3 {
     perspective-origin: 89.6875px 12px;
     transform-origin: 89.6875px 12px;
     caret-color: rgb(255, 255, 255);
-    background: rgba(0, 0, 0, 0) url("https://www.eduroam.cz/lib/tpl/eduroam/images/bullet.php?color=77797c") no-repeat scroll 0px 6.125px / auto padding-box border-box;
+    background: 77797c no-repeat scroll 0px 6.125px / auto padding-box border-box;
     border: 0px none rgb(255, 255, 255);
     font: normal normal 400 normal 12.25px / 24.5px Helvetica, Arial, sans-serif;
     list-style: none outside none;
