@@ -1,18 +1,15 @@
 // -----------------------------------------------------------
 const gulp = require('gulp');
-//const pug = require('gulp-pug');
-//const css = require('gulp-clean-css');
 const concat = require('gulp-concat');
 const uglify = require('gulp-uglify');
 const streamqueue  = require('streamqueue');
 // -----------------------------------------------------------
-//// minify css
-//gulp.task('css', function() {
-//  return gulp.src('stylesheets/*.css')
-//    .pipe(concat('app.min.css'))
-//    .pipe(css({compatibility: 'ie8'}))
-//    .pipe(gulp.dest('public/stylesheets'));
-//});
+// minify css
+gulp.task('css', function() {
+  return gulp.src('stylesheets/*.css')
+    .pipe(concat('app.min.css'))
+    .pipe(gulp.dest('public/stylesheets'));
+});
 // -----------------------------------------------------------
 // Concatenate & Minify JS
 gulp.task('js', function() {
@@ -26,17 +23,10 @@ gulp.task('js', function() {
     gulp.src('javascripts/*.js')
   )
     .pipe(concat('app.js'))
-    //.pipe(uglify())
+    .pipe(uglify())
     .pipe(gulp.dest('public/javascripts'));
 });
 // -----------------------------------------------------------
-//gulp.task('views', function buildHTML() {
-//  return gulp.src('views/templates/*.pug')
-//    .pipe(pug({}))
-//    .pipe(gulp.dest('public/partials'))
-//});
-// -----------------------------------------------------------
 // Default Task
-//gulp.task('default', gulp.series(['views', 'js', 'css']));
-gulp.task('default', gulp.series(['js']));
+gulp.task('default', gulp.series(['js', 'css']));
 // -----------------------------------------------------------
