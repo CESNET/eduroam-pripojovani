@@ -26,7 +26,7 @@ block content
 
         tr
           td Registrace organizace
-          td.bg-green(ng-if='data.length > 0') ano {{data[0].register_date}}
+          td.nowrap.bg-green(ng-if='data.length > 0') ano <br /> {{data[0].register_date}}
           td(ng-if='data.length > 0') Informace o realmu, RADIUS serveru a jmenování správců bylo doručeno a zaevidováno na CESNETu.
 
           td.bg-lightRed(ng-if='data.length == 0') ne
@@ -44,7 +44,7 @@ block content
           td.bg-green(ng-if='data[0].appointment_delivered == "n/a"') {{data[0].appointment_delivered}}
           td(ng-if='data[0].appointment_delivered == "n/a"') Organizace je připojena k CESNETu. Dodatečná administrativa se jí netýká.
 
-          td.bg-green(ng-if='data[0].appointment_delivered == "ano"') {{data[0].appointment_delivered}} {{data[0].appointment_date}}
+          td.nowrap.bg-green(ng-if='data[0].appointment_delivered == "ano"') {{data[0].appointment_delivered}} <br /> {{data[0].appointment_date}}
           td(ng-if='data[0].appointment_delivered == "ano"') Organizace dodala "Prohlášení žadatele o členství v české eduroam federaci".
 
           td.bg-lightRed(ng-if='data[0].appointment_delivered == "ne"') {{data[0].appointment_delivered}}
@@ -116,7 +116,7 @@ block content
         tr
           td Připojeno k eduroam.cz
 
-          td.bg-green(ng-if='data[0].connection_status == "připojeno"') {{data[0].connection_status}} {{data[0].connection_date}}
+          td.nowrap.bg-green(ng-if='data[0].connection_status == "připojeno"') {{data[0].connection_status}} <br /> {{data[0].connection_date}}
           td(ng-if='data[0].connection_status == "připojeno"') Úspěšně připojeno k eduroam.cz.
 
           td.nowrap.bg-orange(ng-if='data[0].connection_status == "připojuje se"') {{data[0].connection_status}}
