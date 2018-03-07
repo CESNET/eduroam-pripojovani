@@ -164,7 +164,7 @@ block content
       tbody
         tr(ng-repeat="row in data | filter : { connection_status : orgs_connection_filter, org_name : orgs_name_filter } | orderBy: sort_type : reverse_sort")
 
-          td.red_color(ng-if='row.org_name === undefined')
+          td.bg-lightRed(ng-if='row.org_name === undefined')
             a(href="/{{row.realms[0]}}") {{row.org_name}}
 
           td(ng-if='row.org_name !== undefined')
@@ -187,17 +187,17 @@ block content
 
           td
             ul
-              li.red_color(ng-if='row.register_date === undefined') ??
+              li.bg-lightRed(ng-if='row.register_date === undefined') ??
               li(ng-if='row.register_date !== undefined') {{ row.register_date }}
 
-              li.red_color(ng-if='row.connection_date === undefined') ??
+              li.bg-lightRed(ng-if='row.connection_date === undefined') ??
               li(ng-if='row.connection_date !== undefined') {{ row.connection_date }}
 
               li(ng-if='row.org_active == true' data-balloon="Prohlášení není vyžadováno.") {{row.appointment_delivered}}
 
               //- no line breaking here
               li.nowrap(ng-if='row.org_active != true && row.appointment_delivered == "ano"') {{row.appointment_delivered}} {{row.appointment_date}}
-              li.red_color(ng-if='row.org_active != true && row.appointment_delivered != "ano"') {{row.appointment_delivered}}
+              li.bg-lightRed(ng-if='row.org_active != true && row.appointment_delivered != "ano"') {{row.appointment_delivered}}
 
           td.bg-green(ng-if='row.testing_id == "ano"') {{row.testing_id}}
           td.bg-green(ng-if='row.testing_id == "n/a"' data-balloon="Testovací uživatel není vyžadován.") {{row.testing_id}}
