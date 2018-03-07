@@ -144,10 +144,7 @@ function update_realms(data, database, done)
 // --------------------------------------------------------------------------------------
 function compare_records(a, b)
 {
-  // TODO - managers?
-  // TODO - realms?
-  // TODO - dalsi veci?
-  var items = ["connection_status", "connection_timestamp", "radius", "register_timestamp", "testing_id", "type", "xml_url" ]
+  var items = ["connection_status", "connection_timestamp", "radius", "register_timestamp", "testing_id", "type", "xml_url", "org_active", "appointment" ]
 
   for(var i in items) {
     if(a[items[i]] != undefined && b[items[i]] != undefined) {      //  both are defined
