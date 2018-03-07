@@ -236,8 +236,10 @@ function search_radius_servers(client, data, database, done)
   var ret = [];
 
   async.each(data, function(item, callback) {
+    var entries = [];       // clear entries
+
     var opts = {
-      filter: '(&(eduroamInfRealm=' + item['dn'] + ')(eduroamMonRealm=' + item['dn'] + '))',	// filter by realm dn
+      filter: '(|(eduroamInfRealm=' + item['dn'] + ')(eduroamMonRealm=' + item['dn'] + '))',	// filter by realm dn
       scope: 'sub',
       attributes: [ 'eduroamMonRealm', 'eduroamInfRealm' ]
     };
@@ -246,20 +248,46 @@ function search_radius_servers(client, data, database, done)
       assert.ifError(err);
 
       res.on('searchEntry', function(entry) {
-        var dict = {};
-        dict.mon_realms = [];
-
-        if(!entry.object['eduroamMonRealm'] && !entry.object['eduroamInfRealm'])
-          item.radius = false;		// is NOT set
-        else
-          item.radius = true;		// is set
+        entries.push(entry.object);     // add to entries
       });
 
       res.on('error', function(err) {
         console.error('error: ' + err.message);
       });
 
+      // iterate all results from one search
+      // both inf realm and mon realm in any of results must match item.dn
       res.on('end', function(result) {
+        var inf_found = false;
+        var mon_found = false;
+
+        for(var i in entries) {
+          if(entries[i]['eduroamMonRealm']) {
+            if(typeof(entries[i]['eduroamMonRealm']) === 'object') {        // array
+              for(var j in entries[i]['eduroamMonRealm'])
+                if(entries[i]['eduroamMonRealm'][j].toLowerCase() == item.dn.toLowerCase()) // convert to lower case to avoid case sensitive issues
+                  mon_found = true;
+            }
+            else {
+              if(entries[i]['eduroamMonRealm'].toLowerCase() == item.dn.toLowerCase())  // convert to lower case to avoid case sensitive issues
+                mon_found = true;
+            }
+          }
+
+          if(entries[i]['eduroamInfRealm']) {
+            if(typeof(entries[i]['eduroamInfRealm']) === 'object') {        // array
+              for(var j in entries[i]['eduroamInfRealm'])
+                if(entries[i]['eduroamInfRealm'][j].toLowerCase() == item.dn.toLowerCase()) // convert to lower case to avoid case sensitive issues
+                  inf_found = true;
+            }
+            else {
+              if(entries[i]['eduroamInfRealm'].toLowerCase() == item.dn.toLowerCase())  // convert to lower case to avoid case sensitive issues
+                inf_found = true;
+            }
+          }
+        }
+
+        item.radius = (mon_found && inf_found);     // set to true if both mon realm and inf realm were found, false otherwise
         callback();
       });
     });
