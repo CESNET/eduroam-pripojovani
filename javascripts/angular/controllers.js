@@ -49,7 +49,6 @@ function convert_to_local_date_string(input)
 
   return tmp.replace(/T.*$/, '').split('-')[2] + ". " + tmp.replace(/T.*$/, '').split('-')[1] + ". " +  tmp.replace(/T.*$/, '').split('-')[0];
 }
-
 // --------------------------------------------------------------------------------------
 // return input converted to max of days, hours and minutes 
 // all is fixed to 2 digits
