@@ -18,6 +18,7 @@ var realms_schema = mongoose.Schema({
   xml_url : Boolean,
   last_change : Date,
   appointment : Date,
+  ico : String
 },
 { versionKey: false });
 // --------------------------------------------------------------------------------------

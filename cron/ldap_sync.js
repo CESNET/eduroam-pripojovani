@@ -303,13 +303,16 @@ function search_orgs(client, data, database, done)
     if(item['org_ptr'] != undefined) {		// org pointer is defined
       var opts = {
         scope: 'base',
-        attributes: [ 'o;lang-cs', 'cesnetActive' ]
+        attributes: [ 'o;lang-cs', 'cesnetActive', 'ICO' ]
       };
 
       client.search(item['org_ptr'], opts, function(err, res) {		// use pointer as search base
         assert.ifError(err);
 
         res.on('searchEntry', function(entry) {
+          if(entry.object['ICO'])
+            data[index].ico = entry.object['ICO'];
+
           if(entry.object['o;lang-cs']) {
             data[index]['org_name'] = entry.object['o;lang-cs'];
           }
