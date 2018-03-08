@@ -182,7 +182,7 @@ function search_managers(client, data, database, done)
 
         res.on('searchEntry', function(entry) {
           var dict = {};
-          dict.dn = entry.object.dn;
+          dict.dn = entry.object.dn.toLowerCase();
           dict.name = entry.object.cn;
           ret.push(dict);		// prepare results for database update
         });
