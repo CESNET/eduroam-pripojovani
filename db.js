@@ -5,8 +5,6 @@ exports.mongoose = mongoose;
 // --------------------------------------------------------------------------------------
 var realms_schema = mongoose.Schema({
   dn : String,
-  org_name : String,
-  org_active : Boolean,
   managers : Array,
   realms : Array,
   type : String,
@@ -18,7 +16,10 @@ var realms_schema = mongoose.Schema({
   xml_url : Boolean,
   last_change : Date,
   appointment : Date,
-  ico : String
+  org_name : String,
+  org_active : Boolean,
+  org_ico : String,
+  org_id : String
 },
 { versionKey: false });
 // --------------------------------------------------------------------------------------
