@@ -5,7 +5,7 @@ var exp = {}
 // export data
 // --------------------------------------------------------------------------------------
 exp.export_data = function (database) {
-  const filename_base = "/home/etlog/connection/public/export/export";
+  const filename_base = "/home/connection/connection/public/export/export";
 
   export_json(database, filename_base);
   export_csv(database, filename_base);
