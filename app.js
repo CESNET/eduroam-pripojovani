@@ -51,7 +51,7 @@ app.use('/export', express.static('public/export'));
 // --------------------------------------------------------------------------------------
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
-  var err = new Error('Not Found');
+  var err = new Error('Stránka nenalezena');
   err.status = 404;
   next(err);
 });
