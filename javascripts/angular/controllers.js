@@ -1,15 +1,52 @@
 // --------------------------------------------------------------------------------------
 // index controller
 // --------------------------------------------------------------------------------------
-angular.module('connection').controller('index_controller', ['$scope', '$http',
-                       function ($scope, $http) {
+angular.module('connection').controller('index_controller', ['$scope', '$window',
+                       function ($scope, $window) {
   $scope.data = data;		// set scope variable from global variable
-  $scope.sort_type = "org_name"; // default sorting is alphabetical
-  $scope.orgs_connection_filter = "připojuje se"; // default filter
-  
+
+  set_filters($scope, $window);
   add_timestamps($scope.data);
   transform_values($scope.data);
 }]);
+// --------------------------------------------------------------------------------------
+// set filtering variables
+// --------------------------------------------------------------------------------------
+function set_filters($scope, $window)
+{
+  // set default values
+  $scope.orgs_connection_filter = "připojuje se";
+  $scope.sort_type = "org_name";
+  $scope.reverse_sort = false;
+
+  // save to localStorage before leaving page
+  $window.onbeforeunload = function(){
+    localStorage.setItem("orgs_connection_filter", $scope.orgs_connection_filter);
+
+    if($scope.orgs_name_filter != undefined)
+      localStorage.setItem("orgs_name_filter", $scope.orgs_name_filter);
+
+    localStorage.setItem("sort_type", $scope.sort_type);
+    localStorage.setItem("reverse_sort", $scope.reverse_sort);
+  };
+
+  // rewrite values from localStorage if they differ
+  if(localStorage.getItem("orgs_connection_filter") !== null)
+    $scope.orgs_connection_filter = localStorage.getItem("orgs_connection_filter");
+
+  if(localStorage.getItem("orgs_name_filter") !== null)
+    $scope.orgs_name_filter = localStorage.getItem("orgs_name_filter");
+
+  if(localStorage.getItem("sort_type") !== null)
+    $scope.sort_type = localStorage.getItem("sort_type");
+
+  if(localStorage.getItem("reverse_sort") !== null) {   // saved as string
+    if(localStorage.getItem("reverse_sort") == "true")
+      $scope.reverse_sort = true;
+    else
+      $scope.reverse_sort = false;
+  }
+}
 // --------------------------------------------------------------------------------------
 // add timestamps
 // --------------------------------------------------------------------------------------
