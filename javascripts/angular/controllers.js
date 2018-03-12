@@ -10,8 +10,6 @@ angular.module('connection').controller('index_controller', ['$scope', '$window'
   transform_values($scope.data);
 
   $scope.check_problematic = function() {
-    console.log($scope.orgs_connection_filter);
-
     if($scope.orgs_connection_filter.key == "problémové")  // filter orgs by problematic
       $scope.problem_filter = true;
     else
@@ -58,11 +56,8 @@ function set_filters($scope, $window)
   };
 
   // rewrite values from localStorage if they differ
-  if(localStorage.getItem("orgs_connection_filter") !== null) {
-    console.log("setting orgs_connection_filter");
-    console.log(localStorage.getItem("orgs_connection_filter"));
+  if(localStorage.getItem("orgs_connection_filter") !== null)
     $scope.orgs_connection_filter = JSON.parse(localStorage.getItem("orgs_connection_filter"));
-  }
   else
     $scope.orgs_connection_filter = $scope.org_types[0];          // set default value
 
