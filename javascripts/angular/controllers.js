@@ -8,20 +8,47 @@ angular.module('connection').controller('index_controller', ['$scope', '$window'
   set_filters($scope, $window);
   add_timestamps($scope.data);
   transform_values($scope.data);
+
+  $scope.check_problematic = function() {
+    console.log($scope.orgs_connection_filter);
+
+    if($scope.orgs_connection_filter.key == "problémové")  // filter orgs by problematic
+      $scope.problem_filter = true;
+    else
+      $scope.problem_filter = undefined;
+  }
 }]);
 // --------------------------------------------------------------------------------------
 // set filtering variables
 // --------------------------------------------------------------------------------------
 function set_filters($scope, $window)
 {
+  // set default values for select
+  $scope.org_types = [{
+      key : "pouze připojující se",
+      value : "připojuje se",
+    }, {
+      key : "připojené",
+      value : "připojeno",
+    }, {
+      key : "odpojené",
+      value : "odpojeno",
+    }, {
+      key : "problémové",
+      value  : undefined,
+    }, {
+      key : "všechny",
+      value: ""
+  }];
+
   // set default values
-  $scope.orgs_connection_filter = "připojuje se";
   $scope.sort_type = "org_name";
   $scope.reverse_sort = false;
+  $scope.problem_filter = undefined;
 
   // save to localStorage before leaving page
   $window.onbeforeunload = function(){
-    localStorage.setItem("orgs_connection_filter", $scope.orgs_connection_filter);
+    localStorage.setItem("orgs_connection_filter", JSON.stringify($scope.orgs_connection_filter));
 
     if($scope.orgs_name_filter != undefined)
       localStorage.setItem("orgs_name_filter", $scope.orgs_name_filter);
@@ -31,8 +58,13 @@ function set_filters($scope, $window)
   };
 
   // rewrite values from localStorage if they differ
-  if(localStorage.getItem("orgs_connection_filter") !== null)
-    $scope.orgs_connection_filter = localStorage.getItem("orgs_connection_filter");
+  if(localStorage.getItem("orgs_connection_filter") !== null) {
+    console.log("setting orgs_connection_filter");
+    console.log(localStorage.getItem("orgs_connection_filter"));
+    $scope.orgs_connection_filter = JSON.parse(localStorage.getItem("orgs_connection_filter"));
+  }
+  else
+    $scope.orgs_connection_filter = $scope.org_types[0];          // set default value
 
   if(localStorage.getItem("orgs_name_filter") !== null)
     $scope.orgs_name_filter = localStorage.getItem("orgs_name_filter");
@@ -127,7 +159,6 @@ function transform_values(data)
   };
 
   for(var item in data) {
-
     // transform values to Czech
     data[item]['connection_status'] = connection[data[item]['connection_status']];
     data[item]['testing_id'] = bool[data[item]['testing_id']];
@@ -160,9 +191,38 @@ function transform_values(data)
       data[item]['testing_id'] = 'n/a';     // set testing user to n/a
       data[item]['appointment_delivered'] = 'n/a'
     }
+
+    // set problem attribute for angular filter
+    set_problem(data[item]);
   }
 
   return data;
+}
+// --------------------------------------------------------------------------------------
+// set problem attribute based on given input
+// --------------------------------------------------------------------------------------
+function set_problem(item)
+{
+  if(item.org_name === undefined)
+    item.problem = true;
+
+  if(item.testing_id == "ne" || item.testing_id === undefined)
+    item.problem = true;
+
+  if(item.xml_url == "ne" || item.xml_url === undefined)
+    item.problem = true;
+
+  if(item.radius == "ne" || item.radius === undefined)
+    item.problem = true;
+
+  if(item.register_date == "ne" || item.register_date === undefined)
+    item.problem = true;
+
+  if(item.connection_date == "ne" || item.connection_date === undefined)
+    item.problem = true;
+
+  if(item.appointment == "ne" || (item.active == true && item.appointment === undefined))
+    item.problem = true;
 }
 // --------------------------------------------------------------------------------------
 // org controller

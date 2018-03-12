@@ -13,9 +13,8 @@ block content
     form.row
 
       label Vybrat
-      select(ng-model='orgs_connection_filter')
-        each key, val in {"pouze připojující se" : "připojuje se", "připojené" : "připojeno", "odpojené" : "odpojeno", "všechny" : ""}
-          option(value = key) #{val}
+      select(ng-model='orgs_connection_filter', ng-options="org_type as org_type.key for org_type in org_types", ng-change='check_problematic()')
+      //-select(ng-model='orgs_connection_filter', ng-options="org_type as org_type.key for org_type in org_types", ng-change='check_problematic()', ng-init='orgs_connection_filter = org_types[0]')
 
       label organizace s názvem
       input(type="text", ng-model='orgs_name_filter')
