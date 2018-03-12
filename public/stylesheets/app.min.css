@@ -131,22 +131,9 @@ h1 {
   margin-top:0;
 }
 li.level1 {
-/*
-  line-height: 24.5px;
-  list-style-position: outside;
-*/
-  background-attachment:scroll;
-  background-clip:border-box;
-  background-color:rgba(0, 0, 0, 0);
-  background-image:url("/images/bullet.png") no-repeat 0px 0.5em;
-  background-origin:padding-box;
-  background-position-x:0px;
-  background-position-y:6.125px;
-  background-repeat-x:;
-  background-repeat-y:;
-/*
-  background-size:5px;
-*/
+  background:url("/images/bullet.png") no-repeat left center;
+  padding-left:5px;
+  list-style:none;
 }
 #dokuwiki__footer {
   text-align: center;
@@ -171,6 +158,10 @@ li.level1 {
 }
 .copyright {
   line-height:1.4;
+}
+
+#dokuwiki__footer a.urlextern {
+  text-decoration-line: none;
 }
 
 .main {
