@@ -144,7 +144,7 @@ function update_realms(data, database, done)
 // --------------------------------------------------------------------------------------
 function compare_records(a, b)
 {
-  var items = ["connection_status", "connection_timestamp", "radius", "register_timestamp", "testing_id", "type", "xml_url", "org_active", "appointment" ]
+  var items = [ "connection_status", "connection_timestamp", "radius", "register_timestamp", "testing_id", "type", "xml_url", "org_active", "appointment", "org_name" ]
 
   for(var i in items) {
     if(a[items[i]] != undefined && b[items[i]] != undefined) {      //  both are defined
@@ -154,7 +154,7 @@ function compare_records(a, b)
    }
     else {
       if(a[items[i]] == undefined && b[items[i]] == undefined)      //  both are UNdefined
-        return false;        // records do NOT differ
+        continue;           // records do not differ so far, continue
 
       return true;     // records differ
     }
