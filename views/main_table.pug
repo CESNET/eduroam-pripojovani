@@ -57,7 +57,7 @@ table.table.striped.hovered
           li(ng-if='row.org_active == true' data-balloon="Prohlášení není vyžadováno." data-balloon-pos="right") {{row.appointment_delivered}}
 
           //- no line breaking here
-          li.nowrap(ng-if='row.org_active != true && row.appointment_delivered == "ano"') {{row.appointment_delivered}} {{row.appointment_date}}
+          li.nowrap(ng-if='row.org_active != true && row.appointment_delivered == "ano"') {{row.appointment_date}}
           li(ng-if='row.org_active != true && row.appointment_delivered == "n/a"' data-balloon="Prohlášení není vyžadováno." data-balloon-pos="right") {{row.appointment_delivered}}
           li.red_color(ng-if='row.org_active != true && row.appointment_delivered == "ne"') {{row.appointment_delivered}}
 
