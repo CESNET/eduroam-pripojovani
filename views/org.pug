@@ -197,7 +197,8 @@ block content
 
               //- no line breaking here
               li.nowrap(ng-if='row.org_active != true && row.appointment_delivered == "ano"') {{row.appointment_delivered}} {{row.appointment_date}}
-              li.bg-lightRed(ng-if='row.org_active != true && row.appointment_delivered != "ano"') {{row.appointment_delivered}}
+              li(ng-if='row.org_active != true && row.appointment_delivered == "n/a"' data-balloon="Prohlášení není vyžadováno." data-balloon-pos="right") {{row.appointment_delivered}}
+              li.bg-lightRed(ng-if='row.org_active != true && row.appointment_delivered == "ne"') {{row.appointment_delivered}}
 
           td.bg-green(ng-if='row.testing_id == "ano"') {{row.testing_id}}
           td.bg-green(ng-if='row.testing_id == "n/a"' data-balloon="Testovací uživatel není vyžadován." data-balloon-pos="right") {{row.testing_id}}

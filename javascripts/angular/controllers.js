@@ -136,11 +136,6 @@ function transform_values(data)
 
     // -----------------------------------
 
-    if(data[item]['type'] == 'IdPSP') // change to IdP+SP
-      data[item]['type'] = 'IdP+SP';
-    else    // SP only
-      data[item]['testing_id'] = 'n/a';     // set testing user to n/a
-
     // -----------------------------------
 
     if(data[item].org_active == true) {     // org is active
@@ -148,13 +143,22 @@ function transform_values(data)
     }
 
     else {                                  // org is not active [ org.active == false or null ]
-      if(data[item].appointment === undefined || data[item].appointment === null)      // no appointment information exists
-        data[item]['appointment_delivered'] = 'ne'
-      else {                                        // appointment was delivered
-        data[item]['appointment_date'] = new Date(data[item]['appointment']);
-        data[item]['appointment_date'] = convert_to_local_date_string(data[item]['appointment_date']);
-        data[item]['appointment_delivered'] = 'ano'
+      if(data[item].type != "SP")   {       // appointment is only needed from IdP+SP or IdP types
+        if(data[item].appointment === undefined || data[item].appointment === null)      // no appointment information exists
+          data[item]['appointment_delivered'] = 'ne'
+        else {                                        // appointment was delivered
+          data[item]['appointment_date'] = new Date(data[item]['appointment']);
+          data[item]['appointment_date'] = convert_to_local_date_string(data[item]['appointment_date']);
+          data[item]['appointment_delivered'] = 'ano'
+        }
       }
+    }
+
+    if(data[item]['type'] == 'IdPSP') // change to IdP+SP
+      data[item]['type'] = 'IdP+SP';
+    else {    // SP only
+      data[item]['testing_id'] = 'n/a';     // set testing user to n/a
+      data[item]['appointment_delivered'] = 'n/a'
     }
   }
 
