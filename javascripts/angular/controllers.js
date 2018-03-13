@@ -4,6 +4,7 @@
 angular.module('connection').controller('index_controller', ['$scope', '$window',
                        function ($scope, $window) {
   $scope.data = data;		// set scope variable from global variable
+  $scope.local_storage_version = 1;
 
   set_filters($scope, $window);
   add_timestamps($scope.data);
@@ -16,6 +17,16 @@ angular.module('connection').controller('index_controller', ['$scope', '$window'
       $scope.problem_filter = undefined;
   }
 }]);
+// --------------------------------------------------------------------------------------
+// set default values for variables
+// --------------------------------------------------------------------------------------
+function set_defaults($scope)
+{
+  $scope.sort_type = "org_name";
+  $scope.reverse_sort = false;
+  $scope.problem_filter = undefined;
+  $scope.orgs_connection_filter = $scope.org_types[0];          // set default value
+}
 // --------------------------------------------------------------------------------------
 // set filtering variables
 // --------------------------------------------------------------------------------------
@@ -33,46 +44,69 @@ function set_filters($scope, $window)
       value : "odpojeno",
     }, {
       key : "problémové",
-      value  : undefined,
+      value  : "",
     }, {
       key : "všechny",
       value: ""
   }];
 
-  // set default values
-  $scope.sort_type = "org_name";
-  $scope.reverse_sort = false;
-  $scope.problem_filter = undefined;
-
   // save to localStorage before leaving page
   $window.onbeforeunload = function(){
-    localStorage.setItem("orgs_connection_filter", JSON.stringify($scope.orgs_connection_filter));
+    var data = {};
 
     if($scope.orgs_name_filter != undefined)
-      localStorage.setItem("orgs_name_filter", $scope.orgs_name_filter);
+      data.orgs_name_filter = $scope.orgs_name_filter;
 
-    localStorage.setItem("sort_type", $scope.sort_type);
-    localStorage.setItem("reverse_sort", $scope.reverse_sort);
+    if($scope.problem_filter != undefined)
+      data.problem_filter = $scope.problem_filter;
+
+    data.orgs_connection_filter = $scope.orgs_connection_filter;
+    data.sort_type = $scope.sort_type;
+    data.reverse_sort = $scope.reverse_sort;
+    data.version = $scope.local_storage_version;
+
+    localStorage.setItem("data", JSON.stringify(data));
   };
 
-  // rewrite values from localStorage if they differ
-  if(localStorage.getItem("orgs_connection_filter") !== null)
-    $scope.orgs_connection_filter = JSON.parse(localStorage.getItem("orgs_connection_filter"));
-  else
-    $scope.orgs_connection_filter = $scope.org_types[0];          // set default value
+  // get data from localStorage
+  if(localStorage.getItem("data") !== null) {       // variable "data" is defined in localStorage
+    try {
+      var data = JSON.parse(localStorage.getItem("data"));      // try to parse object
 
-  if(localStorage.getItem("orgs_name_filter") !== null)
-    $scope.orgs_name_filter = localStorage.getItem("orgs_name_filter");
+      if(data.version === undefined || data.version != $scope.local_storage_version)    // undefined or not matching version
+        set_defaults($scope);
 
-  if(localStorage.getItem("sort_type") !== null)
-    $scope.sort_type = localStorage.getItem("sort_type");
+      else {    // matching data version
+        if(data.orgs_connection_filter !== undefined)
+          $scope.orgs_connection_filter = data.orgs_connection_filter;
+        else
+          $scope.orgs_connection_filter = $scope.org_types[0];
 
-  if(localStorage.getItem("reverse_sort") !== null) {   // saved as string
-    if(localStorage.getItem("reverse_sort") == "true")
-      $scope.reverse_sort = true;
-    else
-      $scope.reverse_sort = false;
+        if(data.orgs_name_filter !== undefined)
+          $scope.orgs_name_filter = data.orgs_name_filter;
+
+        if(data.sort_type !== undefined)
+          $scope.sort_type = data.sort_type;
+        else
+          $scope.sort_type = "org_name";
+
+        if(data.reverse_sort !== undefined)
+            $scope.reverse_sort = data.reverse_sort;
+        else
+          $scope.reverse_sort = false;
+
+        if(data.problem_filter !== undefined)
+          $scope.problem_filter = data.problem_filter;
+        else
+          $scope.sort_type = undefined;
+      }
+    }
+    catch (e) { // parsing did not succeed
+      set_defaults($scope);
+    }
   }
+  else
+    set_defaults($scope);
 }
 // --------------------------------------------------------------------------------------
 // add timestamps
