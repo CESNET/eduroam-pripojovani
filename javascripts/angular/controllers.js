@@ -98,7 +98,7 @@ function set_filters($scope, $window)
         if(data.problem_filter !== undefined)
           $scope.problem_filter = data.problem_filter;
         else
-          $scope.sort_type = undefined;
+          $scope.problem_filter = undefined;
       }
     }
     catch (e) { // parsing did not succeed
