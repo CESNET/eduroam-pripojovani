@@ -12,3 +12,4 @@ There are several main goals of this application:
 # TODO
 - automatically generated link to RT system (evidence that organization is being worked on) 
 - link to CAAS (more details available, but authentication required) 
+- support other languages
