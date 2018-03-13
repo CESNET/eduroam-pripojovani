@@ -250,7 +250,7 @@ function set_problem(item)
   if(item.connection_date == "ne" || item.connection_date === undefined)
     item.problem = true;
 
-  if(item.appointment == "ne" || (item.active == true && item.appointment === undefined))
+  if(item.appointment_delivered == "ne" || (item.active == true && item.appointment === undefined))
     item.problem = true;
 }
 // --------------------------------------------------------------------------------------
