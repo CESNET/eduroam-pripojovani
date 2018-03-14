@@ -136,7 +136,42 @@ function update_realms(data, database, done)
   }, function(err) {
       if(err)
         console.log(err);
-      done();
+      delete_nonexistent(database, data, done);
+  });
+}
+// --------------------------------------------------------------------------------------
+// delete non existent realms
+// --------------------------------------------------------------------------------------
+function delete_nonexistent(database, data, done)
+{
+  database.realms.distinct("dn",        // distinct data by dn
+    function(err, results) {
+      async.each(results, function(res, callback) {
+        var found = false;
+
+        for(var j in data)
+          if(res == data[j].dn)
+            found = true;
+
+        if(!found)
+          delete_realm(database, res, callback);     // calls callback when finished
+      }, function(err) {
+          if(err)
+            console.log(err);
+          done();     // all non existent realms deleted
+      });
+  });
+}
+// --------------------------------------------------------------------------------------
+// delete realm by name
+// --------------------------------------------------------------------------------------
+function delete_realm(database, name, callback)
+{
+  database.realms.deleteMany({ dn : name },
+    function(err, results) {
+      if(err)
+        console.log(err);
+      callback();
   });
 }
 // --------------------------------------------------------------------------------------
