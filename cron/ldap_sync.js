@@ -86,7 +86,7 @@ exp.search_and_update_realms = function (client, database, search_base, callback
       search_radius_servers(client, ret, database, function() {
         search_orgs(client, ret, database, function() {
           search_managers(client, ret, database, function() {
-            update_realms(ret, database, function() {
+            update_realms(ret, database, search_base, function() {
               if(callback)
                 callback();
             });
@@ -99,7 +99,7 @@ exp.search_and_update_realms = function (client, database, search_base, callback
 // --------------------------------------------------------------------------------------
 // update realms collection in database
 // --------------------------------------------------------------------------------------
-function update_realms(data, database, done)
+function update_realms(data, database, search_base, done)
 {
   async.each(data, function(item, callback) {
     database.realms.aggregate([{ $match : { dn: item.dn } },        // match item by dn
@@ -136,7 +136,11 @@ function update_realms(data, database, done)
   }, function(err) {
       if(err)
         console.log(err);
-      delete_nonexistent(database, data, done);
+
+      if(search_base == config.search_base_realms)      // delete non existing realms only when synchronizing data automatically
+        delete_nonexistent(database, data, done);
+      else
+        done();
   });
 }
 // --------------------------------------------------------------------------------------
