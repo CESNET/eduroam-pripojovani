@@ -52,10 +52,12 @@ exp.search_and_update_realms = function (client, database, search_base, callback
       dict.connection_status = entry.object['eduroamConnectionStatus'];
       dict.type = entry.object['eduroamMemberType'];
 
-      if(typeof(entry.object['manager']) === 'object')	// multiple managers
-        dict.managers = entry.object['manager'];
+      if(typeof(entry.object['manager']) === 'object') {	// multiple managers
+        for(var manager in entry.object['manager'])
+          dict.managers.push(entry.object['manager'].toLowerCase());
+      }
       else  // one manager only
-        dict.managers.push(entry.object['manager']);
+        dict.managers.push(entry.object['manager'].toLowerCase());
 
       dict.testing_id = Boolean(entry.object['eduroamTestingId']);
       dict.xml_url = Boolean(entry.object['labeledUri']);
