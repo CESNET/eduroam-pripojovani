@@ -54,7 +54,7 @@ exp.search_and_update_realms = function (client, database, search_base, callback
 
       if(typeof(entry.object['manager']) === 'object') {	// multiple managers
         for(var manager in entry.object['manager'])
-          dict.managers.push(entry.object['manager'].toLowerCase());
+          dict.managers.push(entry.object['manager'][manager].toLowerCase());
       }
       else  // one manager only
         dict.managers.push(entry.object['manager'].toLowerCase());
