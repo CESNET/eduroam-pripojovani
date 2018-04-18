@@ -89,6 +89,10 @@ exp.search_and_update_realms = function (client, database, search_base, callback
         search_orgs(client, ret, database, function() {
           search_managers(client, ret, database, function() {
             update_realms(ret, database, search_base, function() {
+              client.unbind(function(err) {   // unbind after all search operations are done
+                assert.ifError(err);
+              });
+
               if(callback)
                 callback();
             });
