@@ -90,6 +90,7 @@ block content
           td.bg-lightRed(ng-if='data[0].testing_id != "ano" && data.length == 0') ne
 
           td(ng-if='data[0].testing_id == "ne"') Testovací uživatel nebyl dodán. Každá připojená organizace je povinna dodat trvale funkční testovací účet.
+          td(ng-if='data.length == 0') Testovací uživatel nebyl dodán. Každá připojená organizace je povinna dodat trvale funkční testovací účet.
 
           td(ng-if='data[0].testing_id == "n/a"') {{data[0].testing_id}}
           td(ng-if='data[0].testing_id == "n/a"') Organizace typu SP neposkytují identity, a tak není testovací účet evidován.
