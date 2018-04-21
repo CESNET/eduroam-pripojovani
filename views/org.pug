@@ -41,8 +41,8 @@ block content
         tr
           td Dodané prohlášení
 
-          td.bg-green(ng-if='data[0].appointment_delivered == "n/a"') {{data[0].appointment_delivered}}
-          td(ng-if='data[0].appointment_delivered == "n/a"') Organizace je připojena k CESNETu. Dodatečná administrativa se jí netýká.
+          td.bg-green(ng-if='data[0].appointment_delivered == "n/a" && data[0].type != "SP"') {{data[0].appointment_delivered}}
+          td(ng-if='data[0].appointment_delivered == "n/a" && data[0].type != "SP"') Organizace je připojena k CESNETu. Dodatečná administrativa se jí netýká.
 
           td.nowrap.bg-green(ng-if='data[0].appointment_delivered == "ano"') {{data[0].appointment_delivered}} <br /> {{data[0].appointment_date}}
           td(ng-if='data[0].appointment_delivered == "ano"') Organizace dodala "Prohlášení žadatele o členství v české eduroam federaci".
@@ -52,6 +52,9 @@ block content
 
           td.bg-lightRed(ng-if='data.length == 0') ne
           td(ng-if='data.length == 0') Čekáme na dodání "Prohlášení žadatele o členství v české eduroam federaci".
+
+          td(ng-if='data[0].appointment_delivered == "n/a" && data[0].type == "SP"') n/a
+          td(ng-if='data[0].appointment_delivered == "n/a" && data[0].type == "SP"') Organizace neposkytuje eduroam identity, a tak se jí dodatečná administrativa netýká.
 
           td
             a(href="https://www.eduroam.cz/cs/spravce/pripojovani/spravci#prohlaseni_zadatele_o_clenstvi_v_ceske_eduroam_federaci") Dokumentace k prohlášení
@@ -83,10 +86,13 @@ block content
           td.bg-green(ng-if='data[0].testing_id == "ano"') {{data[0].testing_id}}
           td(ng-if='data[0].testing_id == "ano"') Testovací uživatel byl dodán.
 
-          td.bg-lightRed(ng-if='data[0].testing_id != "ano" && data.length > 0') {{data[0].testing_id}}
+          td.bg-lightRed(ng-if='data[0].testing_id == "ne" && data.length > 0') {{data[0].testing_id}}
           td.bg-lightRed(ng-if='data[0].testing_id != "ano" && data.length == 0') ne
 
-          td(ng-if='data[0].testing_id != "ano"') Testovací uživatel nebyl dodán. Každá připojená organizace je povinna dodat trvale funkční testovací účet.
+          td(ng-if='data[0].testing_id == "ne"') Testovací uživatel nebyl dodán. Každá připojená organizace je povinna dodat trvale funkční testovací účet.
+
+          td(ng-if='data[0].testing_id == "n/a"') {{data[0].testing_id}}
+          td(ng-if='data[0].testing_id == "n/a"') Organizace typu SP neposkytují identity, a tak není testovací účet evidován.
 
           td
             a(href="https://www.eduroam.cz/cs/spravce/pripojovani/testovaci_ucet") Dokumentace k testovacímu účtu
@@ -201,7 +207,7 @@ block content
               li.bg-lightRed(ng-if='row.org_active != true && row.appointment_delivered == "ne"') {{row.appointment_delivered}}
 
           td.bg-green(ng-if='row.testing_id == "ano"') {{row.testing_id}}
-          td.bg-green(ng-if='row.testing_id == "n/a"' data-balloon="Testovací uživatel není vyžadován." data-balloon-pos="right") {{row.testing_id}}
+          td(ng-if='row.testing_id == "n/a"' data-balloon="Testovací uživatel není vyžadován." data-balloon-pos="right") {{row.testing_id}}
           td.bg-lightRed(ng-if='row.testing_id == "ne"') {{row.testing_id}}
 
           td.bg-green(ng-if='row.xml_url == "ano"') {{row.xml_url}}
