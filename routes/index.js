@@ -17,7 +17,10 @@ router.get('/', function(req, res, next) {
 function get_inst_list(req, res)
 {
   var data = [];
-  var stream = req.db.realms.aggregate([{ $group : { _id : { "dn" : "$dn" },
+  var stream = req.db.realms.aggregate([
+                             { $sort : { last_change : 1 } },    // sort by last_change timestamp first !
+                             // sorting is needed first for $last to correctly get newest document
+                             { $group : { _id : { "dn" : "$dn" },
                              // additional fields
                              connection_status : { $last : "$connection_status" },
                              last_change : { $last : "$last_change" },
@@ -33,7 +36,6 @@ function get_inst_list(req, res)
                              org_active : { $last : "$org_active" },
                              appointment : { $last : "$appointment" },
                            } } ])
-                           //{ $sort : { last_change : -1 } },    // sort by last_change timestamp
                            //{ $limit : 1 }])                       // get only the newest record
   .cursor({ batchSize: 1000 }).exec();
 
