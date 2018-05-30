@@ -165,6 +165,8 @@ function delete_nonexistent(database, data, done)
 
         if(!found)
           delete_realm(database, res, callback);     // calls callback when finished
+        else
+          callback();
       }, function(err) {
           if(err)
             console.log(err);
