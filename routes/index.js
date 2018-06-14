@@ -148,6 +148,10 @@ function get_org(req, res)
         }
         else        // org found
           get_manager_names(req, res, data, 'org', data.org_name, respond);
+
+        client.unbind(function(err) {   // unbind after all search operations are done
+          assert.ifError(err);
+        });
       });
     });
 }
