@@ -28,3 +28,7 @@ h3 {
 .red_color {
   background-color: #f3c9c6;
 }
+
+table {
+  overflow: hidden;
+}
