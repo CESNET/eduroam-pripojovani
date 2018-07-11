@@ -1,6 +1,6 @@
 .main {
   border-top: 12px solid #00658d;
-  min-height: 100%;
+  padding-bottom:320px;
 }
 
 p {
@@ -27,4 +27,9 @@ h3 {
 
 .red_color {
   background-color: #f3c9c6;
+}
+
+#container {
+    min-height:100%;
+    position:relative;
 }
