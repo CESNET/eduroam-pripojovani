@@ -7,8 +7,8 @@ html(ng-app="connection")
     link(rel='stylesheet', href='/stylesheets/app.min.css')
 
   body
-    include ./linker.pug
     div#container
+      include ./linker.pug
       div.main
         block content
       include ./footer.pug
