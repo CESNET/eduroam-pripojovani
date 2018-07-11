@@ -48,7 +48,6 @@ h1 {
   line-height: 1.2;
 }
 #dokuwiki__footer {
-  /* position: relative; */
   position:absolute;
   bottom:0;
   overflow: hidden;
@@ -172,7 +171,6 @@ li.level1 {
 
 .main {
   border-top: 12px solid #00658d;
-  /* min-height: 100%; */
   padding-bottom:320px;
 }
 
