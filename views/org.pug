@@ -172,7 +172,7 @@ block content
         tr(ng-repeat="row in data | filter : { connection_status : orgs_connection_filter, org_name : orgs_name_filter } | orderBy: sort_type : reverse_sort")
 
           td.bg-lightRed(ng-if='row.org_name === undefined')
-            a(href="/{{row.realms[0]}}") {{row.org_name}}
+            | Přidávání názvu organizace do číselníku je v procesu.
 
           td(ng-if='row.org_name !== undefined')
             a(href="/{{row.realms[0]}}") {{row.org_name}}
