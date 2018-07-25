@@ -232,6 +232,9 @@ function transform_values(data)
 // --------------------------------------------------------------------------------------
 function set_problem(item)
 {
+  if(item.connection_status == "odpojeno") // do not process orgs that are disconnected
+    return;
+
   if(item.org_name === undefined)
     item.problem = true;
 
