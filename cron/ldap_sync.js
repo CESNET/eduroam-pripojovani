@@ -9,7 +9,7 @@ var exp = {}
 // --------------------------------------------------------------------------------------
 // process old data
 // --------------------------------------------------------------------------------------
-exp.synchronize_data = function (database) {
+exp.synchronize_data = function (database, callback) {
   var client = ldap.createClient({
     url: 'ldaps://' + config.ldap_host
   });
@@ -18,7 +18,7 @@ exp.synchronize_data = function (database) {
     assert.ifError(err)
   })
 
-  exp.search_and_update_realms(client, database, config.search_base_realms);
+  exp.search_and_update_realms(client, database, config.search_base_realms, callback);
 };
 // --------------------------------------------------------------------------------------
 // search ldap for realms
