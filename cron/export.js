@@ -16,8 +16,32 @@ exp.export_data = function (database) {
 function export_json(database, filename_base)
 {
   var data = [];
-  var stream = database.realms.find({ connection_status : "connected" },
-    { _id : 0, org_name : 1, realms : 1, type : 1, connection_timestamp : 1, org_ico : 1}).cursor({ batchSize: 1000 });
+  var stream = req.db.realms.aggregate([
+                             { $match : { connection_status : "connected" } },
+                             { $sort : { last_change : 1 } },    // sort by last_change timestamp first !
+                             // sorting is needed first for $last to correctly get newest document
+                             { $group : { _id : { "dn" : "$dn" },
+                             // additional fields
+                               connection_status : { $last : "$connection_status" },
+                               last_change : { $last : "$last_change" },
+                               managers : { $last : "$managers" },
+                               realms : { $last : "$realms" },
+                               testing_id : { $last : "$testing_id" },
+                               register_timestamp : { $last : "$register_timestamp" },
+                               connection_timestamp : { $last : "$connection_timestamp" },
+                               type : { $last : "$type" },
+                               xml_url : { $last : "$xml_url" },
+                               radius : { $last : "$radius" },
+                               org_name : { $last : "$org_name" },
+                               org_active : { $last : "$org_active" },
+                               org_ico : { $last : "$org_ico" },
+                               appointment : { $last : "$appointment" },
+                             } },
+                             { $project : {
+                                _id : 0, org_name : 1, realms : 1, type : 1, connection_timestamp : 1, org_ico : 1
+                             } }
+                             ])
+  .cursor({ batchSize: 1000 }).exec();
 
   stream.on('error', function (err) {
     console.log(err);
@@ -37,8 +61,32 @@ function export_json(database, filename_base)
 function export_csv(database, filename_base)
 {
   var data = [];
-  var stream = database.realms.find({ connection_status : "connected" },
-    { _id : 0, org_name : 1, realms : 1, type : 1, connection_timestamp : 1, org_ico : 1, org_id : 1}).cursor({ batchSize: 1000 });
+  var stream = req.db.realms.aggregate([
+                             { $match : { connection_status : "connected" } },
+                             { $sort : { last_change : 1 } },    // sort by last_change timestamp first !
+                             // sorting is needed first for $last to correctly get newest document
+                             { $group : { _id : { "dn" : "$dn" },
+                             // additional fields
+                               connection_status : { $last : "$connection_status" },
+                               last_change : { $last : "$last_change" },
+                               managers : { $last : "$managers" },
+                               realms : { $last : "$realms" },
+                               testing_id : { $last : "$testing_id" },
+                               register_timestamp : { $last : "$register_timestamp" },
+                               connection_timestamp : { $last : "$connection_timestamp" },
+                               type : { $last : "$type" },
+                               xml_url : { $last : "$xml_url" },
+                               radius : { $last : "$radius" },
+                               org_name : { $last : "$org_name" },
+                               org_active : { $last : "$org_active" },
+                               org_ico : { $last : "$org_ico" },
+                               appointment : { $last : "$appointment" },
+                             } },
+                             { $project : {
+                                _id : 0, org_name : 1, realms : 1, type : 1, connection_timestamp : 1, org_ico : 1
+                             } }
+                             ])
+  .cursor({ batchSize: 1000 }).exec();
 
   stream.on('error', function (err) {
     console.log(err);
