@@ -16,7 +16,7 @@ exp.export_data = function (database) {
 function export_json(database, filename_base)
 {
   var data = [];
-  var stream = req.db.realms.aggregate([
+  var stream = database.realms.aggregate([
                              { $match : { connection_status : "connected" } },
                              { $sort : { last_change : 1 } },    // sort by last_change timestamp first !
                              // sorting is needed first for $last to correctly get newest document
@@ -48,7 +48,7 @@ function export_json(database, filename_base)
   });
 
   stream.on('data', function(item) {
-    data.push(item.toObject());     // use plain object not mongoose object !!!!!
+    data.push(item);
   });
 
   stream.on('end', function(items) {
@@ -61,7 +61,7 @@ function export_json(database, filename_base)
 function export_csv(database, filename_base)
 {
   var data = [];
-  var stream = req.db.realms.aggregate([
+  var stream = database.realms.aggregate([
                              { $match : { connection_status : "connected" } },
                              { $sort : { last_change : 1 } },    // sort by last_change timestamp first !
                              // sorting is needed first for $last to correctly get newest document
@@ -93,7 +93,7 @@ function export_csv(database, filename_base)
   });
 
   stream.on('data', function(item) {
-    data.push(item.toObject());     // use plain object not mongoose object !!!!!
+    data.push(item);
   });
 
   stream.on('end', function(items) {
