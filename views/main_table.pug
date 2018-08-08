@@ -25,10 +25,9 @@ table.table.striped.hovered
   tbody
     tr(ng-repeat="row in data | filter : { connection_status : orgs_connection_filter.value, org_name : orgs_name_filter, problem : problem_filter } | orderBy: sort_type : reverse_sort")
 
-      td.red_color(ng-if='row.org_name === undefined')
-        a(href="/{{row.realms[0]}}") {{row.org_name}}
+      td.red_color(ng-if='row.org_name === undefined || row.org_name === null')
 
-      td(ng-if='row.org_name !== undefined')
+      td(ng-if='row.org_name !== undefined && row.org_name !== null')
         a(href="/{{row.realms[0]}}") {{row.org_name}}
 
       td.norwap
