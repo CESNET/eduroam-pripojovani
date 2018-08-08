@@ -34,10 +34,10 @@ function save_data($scope)
 {
   var data = {};
 
-  if($scope.orgs_name_filter != undefined)
+  if($scope.orgs_name_filter !== undefined && $scope.orgs_name_filter != "" && $scope.orgs_name_filter !== null)
     data.orgs_name_filter = $scope.orgs_name_filter;
 
-  if($scope.problem_filter != undefined)
+  if($scope.problem_filter !== undefined)
     data.problem_filter = $scope.problem_filter;
 
   data.orgs_connection_filter = $scope.orgs_connection_filter;
@@ -64,7 +64,7 @@ function load_data($scope)
       else
         $scope.orgs_connection_filter = $scope.org_types[0];
 
-      if(data.orgs_name_filter !== undefined)
+      if(data.orgs_name_filter !== undefined && $scope.orgs_name_filter != "" && $scope.orgs_name_filter !== null)
         $scope.orgs_name_filter = data.orgs_name_filter;
 
       if(data.sort_type !== undefined)
