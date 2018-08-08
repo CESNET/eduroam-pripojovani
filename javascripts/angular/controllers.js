@@ -28,6 +28,66 @@ function set_defaults($scope)
   $scope.orgs_connection_filter = $scope.org_types[0];          // set default value
 }
 // --------------------------------------------------------------------------------------
+// save data to localStorage
+// --------------------------------------------------------------------------------------
+function save_data($scope)
+{
+  var data = {};
+
+  if($scope.orgs_name_filter != undefined)
+    data.orgs_name_filter = $scope.orgs_name_filter;
+
+  if($scope.problem_filter != undefined)
+    data.problem_filter = $scope.problem_filter;
+
+  data.orgs_connection_filter = $scope.orgs_connection_filter;
+  data.sort_type = $scope.sort_type;
+  data.reverse_sort = $scope.reverse_sort;
+  data.version = $scope.local_storage_version;
+
+  localStorage.setItem("data", JSON.stringify(data));
+}
+// --------------------------------------------------------------------------------------
+// load data from localStorage
+// --------------------------------------------------------------------------------------
+function load_data($scope)
+{
+  try {
+    var data = JSON.parse(localStorage.getItem("data"));      // try to parse object
+
+    if(data.version === undefined || data.version != $scope.local_storage_version)    // undefined or not matching version
+      set_defaults($scope);
+
+    else {    // matching data version
+      if(data.orgs_connection_filter !== undefined)
+        $scope.orgs_connection_filter = data.orgs_connection_filter;
+      else
+        $scope.orgs_connection_filter = $scope.org_types[0];
+
+      if(data.orgs_name_filter !== undefined)
+        $scope.orgs_name_filter = data.orgs_name_filter;
+
+      if(data.sort_type !== undefined)
+        $scope.sort_type = data.sort_type;
+      else
+        $scope.sort_type = "org_name";
+
+      if(data.reverse_sort !== undefined)
+          $scope.reverse_sort = data.reverse_sort;
+      else
+        $scope.reverse_sort = false;
+
+      if(data.problem_filter !== undefined)
+        $scope.problem_filter = data.problem_filter;
+      else
+        $scope.problem_filter = undefined;
+    }
+  }
+  catch (e) { // parsing did not succeed
+    set_defaults($scope);
+  }
+}
+// --------------------------------------------------------------------------------------
 // set filtering variables
 // --------------------------------------------------------------------------------------
 function set_filters($scope, $window)
@@ -52,59 +112,12 @@ function set_filters($scope, $window)
 
   // save to localStorage before leaving page
   $window.onbeforeunload = function(){
-    var data = {};
-
-    if($scope.orgs_name_filter != undefined)
-      data.orgs_name_filter = $scope.orgs_name_filter;
-
-    if($scope.problem_filter != undefined)
-      data.problem_filter = $scope.problem_filter;
-
-    data.orgs_connection_filter = $scope.orgs_connection_filter;
-    data.sort_type = $scope.sort_type;
-    data.reverse_sort = $scope.reverse_sort;
-    data.version = $scope.local_storage_version;
-
-    localStorage.setItem("data", JSON.stringify(data));
+    save_data($scope);
   };
 
   // get data from localStorage
-  if(localStorage.getItem("data") !== null) {       // variable "data" is defined in localStorage
-    try {
-      var data = JSON.parse(localStorage.getItem("data"));      // try to parse object
-
-      if(data.version === undefined || data.version != $scope.local_storage_version)    // undefined or not matching version
-        set_defaults($scope);
-
-      else {    // matching data version
-        if(data.orgs_connection_filter !== undefined)
-          $scope.orgs_connection_filter = data.orgs_connection_filter;
-        else
-          $scope.orgs_connection_filter = $scope.org_types[0];
-
-        if(data.orgs_name_filter !== undefined)
-          $scope.orgs_name_filter = data.orgs_name_filter;
-
-        if(data.sort_type !== undefined)
-          $scope.sort_type = data.sort_type;
-        else
-          $scope.sort_type = "org_name";
-
-        if(data.reverse_sort !== undefined)
-            $scope.reverse_sort = data.reverse_sort;
-        else
-          $scope.reverse_sort = false;
-
-        if(data.problem_filter !== undefined)
-          $scope.problem_filter = data.problem_filter;
-        else
-          $scope.problem_filter = undefined;
-      }
-    }
-    catch (e) { // parsing did not succeed
-      set_defaults($scope);
-    }
-  }
+  if(localStorage.getItem("data") !== null)       // variable "data" is defined in localStorage
+    load_data($scope);
   else
     set_defaults($scope);
 }
