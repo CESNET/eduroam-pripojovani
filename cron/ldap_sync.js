@@ -4,6 +4,7 @@ const assert = require('assert');
 const secrets = require('../config/secrets.js');
 const config = require('../config/config.js');
 const ldap2date = require('ldap2date');
+const data_export = require('./export.js');
 // --------------------------------------------------------------------------------------
 var exp = {}
 // --------------------------------------------------------------------------------------
@@ -117,7 +118,7 @@ function update_realms(data, database, search_base, done)
         if(results.length > 0) {   // something found
 
           // compare record for insertion and the database record, if they differ, insert record
-          if(compare_records(results[0], item)) {   // records differ
+          if(compare_records(results[0], item, database)) {   // records differ
 
             database.realms.update({ dn : item.dn, last_change : item.last_change }, item, { upsert : true },        // nothing matches search criteria, this is actually an insert
             function(err, result) {
@@ -189,9 +190,13 @@ function delete_realm(database, name, callback)
 // --------------------------------------------------------------------------------------
 // compare two records
 // --------------------------------------------------------------------------------------
-function compare_records(a, b)
+function compare_records(a, b, database)
 {
   var items = [ "connection_status", "connection_timestamp", "radius", "register_timestamp", "testing_id", "type", "xml_url", "org_active", "appointment", "org_name" ]
+
+  // check if connection status changed to connected
+  if(a[items[0]] != b[items[0]] && b[items[0]] == "connected")
+    data_export.export_data(database);
 
   for(var i in items) {
     if(a[items[i]] != undefined && b[items[i]] != undefined) {      //  both are defined
