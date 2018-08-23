@@ -108,7 +108,12 @@ function respond(res, data, view_name, title)
 // get specific org
 // --------------------------------------------------------------------------------------
 router.get('/:org', function(req, res, next) {
-  get_org(req, res);
+  if(/^.*\.[a-z]{2,3}/.test(req.params.org))
+    get_org(req, res);
+  else {
+    res.status(404);
+    get_manager_names(req, res, [], 'org', 'Organizace nenalezena', respond);
+  }
 });
 // --------------------------------------------------------------------------------------
 // get organization
