@@ -108,7 +108,7 @@ function respond(res, data, view_name, title)
 // get specific org
 // --------------------------------------------------------------------------------------
 router.get('/:org', function(req, res, next) {
-  if(/^.*\.[a-z]{2,3}$/.test(req.params.org))
+  if(/^.*\.[a-zA-Z]{2,3}$/.test(req.params.org))
     get_org(req, res);
   else {
     res.status(404);
