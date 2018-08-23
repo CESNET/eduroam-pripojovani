@@ -128,10 +128,10 @@ function get_org(req, res)
     assert.ifError(err)
   })
 
-  ldap_sync.search_and_update_realms(client, req.db, "cn=" + req.params.org + "," + config.search_base_realms,      // only specific realm
+  ldap_sync.search_and_update_realms(client, req.db, "cn=" + req.params.org.toLowerCase() + "," + config.search_base_realms,      // only specific realm
     function() {
       var data = [];
-      var stream = req.db.realms.aggregate([{ $match : { "realms" : req.params.org } },        // match item by dn
+      var stream = req.db.realms.aggregate([{ $match : { "realms" : req.params.org.toLowerCase() } },        // match item by dn
                                { $sort : { last_change : -1 } },    // sort by last_change timestamp
                                //{ $limit : 1 }                     // get only the newest record
       ]).cursor({ batchSize: 1000 }).exec();
