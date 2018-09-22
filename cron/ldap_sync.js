@@ -212,6 +212,16 @@ function compare_records(a, b, database)
     }
   }
 
+  // check if managers differ
+  if(a.managers.length != b.managers.length)
+    return true;
+
+  else {
+    for(var i in a.managers)
+      if(a.managers[i] != b.managers[i])
+        return true;
+  }
+
   return false;        // records do NOT differ
 }
 // --------------------------------------------------------------------------------------
