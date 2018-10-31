@@ -127,7 +127,7 @@ block content
           td(ng-if='data[0].connection_status == "připojeno"') Úspěšně připojeno k eduroam.cz.
 
           td.nowrap.bg-orange(ng-if='data[0].connection_status == "připojuje se"') {{data[0].connection_status}}
-          td(ng-if='data[0].connection_status == "připojuje se"') Probíhá připojování k eduroam.cz. K úspěšnému dokončení připojování musí být splněny všechny dílčí admistrativní kroky a musí projít všechny povinné technické testy.
+          td(ng-if='data[0].connection_status == "připojuje se"') Probíhá připojování k eduroam.cz. K úspěšnému dokončení připojování musí být splněny všechny dílčí admistrativní kroky a musí projít všechny povinné (notifikované) #[a("href=https://ermon.cesnet.cz/monitoring/list/hostgroups?hostgroup={{data[0].realms[0]}}") technické testy]. #[br] #[br] Přepnutí stavu provádíme ručně. O přepnutí požádejte prostřednictvím příslušného lístku kde vaše připojování řešíme.
 
           td.bg-lightRed(ng-if='data[0].connection_status == "odpojeno"') {{data[0].connection_status}}
           td(ng-if='data[0].connection_status == "odpojeno"') Dočasně odpojedno od eduroam.cz z technicko-administativních důvodů.
