@@ -229,10 +229,11 @@ function transform_values(data)
 
     if(data[item]['type'] == 'IdPSP') // change to IdP+SP
       data[item]['type'] = 'IdP+SP';
-    else {    // SP only
+    else if(data[item]['type'] == 'SP') {    // SP only
       data[item]['testing_id'] = 'n/a';     // set testing user to n/a
       data[item]['appointment_delivered'] = 'n/a'
     }
+    // else IdP only
 
     // set problem attribute for angular filter
     set_problem(data[item]);
