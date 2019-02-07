@@ -105,16 +105,16 @@ block content
         tr
           td Informace o pokrytí
 
-          td.bg-green(ng-if='data[0].xml_url == "ano"') {{data[0].xml_url}}
-          td(ng-if='data[0].xml_url == "ano"') Informace o pokrytí jsou dostupné.
+          td.bg-green(ng-if='data[0].coverage_info == "ano"') {{data[0].coverage_info}}
+          td(ng-if='data[0].coverage_info == "ano"') Informace o pokrytí jsou dostupné.
 
-          td.bg-lightRed(ng-if='data[0].xml_url != "ano" && data.length > 0') {{data[0].xml_url}}
-          td.bg-lightRed(ng-if='data[0].xml_url != "ano" && data.length == 0') ne
+          td.bg-lightRed(ng-if='data[0].coverage_info != "ano" && data.length > 0') {{data[0].coverage_info}}
+          td.bg-lightRed(ng-if='data[0].coverage_info != "ano" && data.length == 0') ne
 
-          td(ng-if='data[0].xml_url != "ano"') Informace o pokrytí nejsou dostupné. Informace o pokrytí jsou předávány skrze XML soubor na webu organizace.
+          td(ng-if='data[0].coverage_info != "ano"') Informace o pokrytí nejsou dostupné. Informace o pokrytí jsou vytvářeny a editovány v aplikaci #[a(href="https://pokryti.eduroam.cz/") pokryti.eduroam.cz].
 
           td
-            a(href="https://www.eduroam.cz/cs/spravce/edudb/institution_xml") Dokumentace k pokrytí
+            a(href="https://www.eduroam.cz/cs/spravce/edudb/institution_xml") TODO - upravit odkaz
 
 
         //----------------------------------------------------------------------------------------
@@ -211,8 +211,8 @@ block content
           td(ng-if='row.testing_id == "n/a"' data-balloon="Testovací uživatel není vyžadován." data-balloon-pos="right") {{row.testing_id}}
           td.bg-lightRed(ng-if='row.testing_id == "ne"') {{row.testing_id}}
 
-          td.bg-green(ng-if='row.xml_url == "ano"') {{row.xml_url}}
-          td.bg-lightRed(ng-if='row.xml_url != "ano"') {{row.xml_url}}
+          td.bg-green(ng-if='row.coverage_info == "ano"') {{row.coverage_info}}
+          td.bg-lightRed(ng-if='row.coverage_info != "ano"') {{row.coverage_info}}
 
           td.bg-green(ng-if='row.radius == "ano"') {{row.radius}}
           td.bg-lightRed(ng-if='row.radius != "ano"') {{row.radius}}
