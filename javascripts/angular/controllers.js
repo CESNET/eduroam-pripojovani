@@ -205,7 +205,7 @@ function transform_values(data)
     data[item]['connection_status'] = connection[data[item]['connection_status']];
     data[item]['testing_id'] = bool[data[item]['testing_id']];
     data[item]['radius'] = bool[data[item]['radius']];
-    data[item]['xml_url'] = bool[data[item]['xml_url']];
+    data[item]['coverage_info'] = bool[data[item]['coverage_info']];
 
     // -----------------------------------
 
@@ -255,7 +255,7 @@ function set_problem(item)
   if(item.testing_id == "ne" || item.testing_id === undefined)
     item.problem = true;
 
-  if(item.xml_url == "ne" || item.xml_url === undefined)
+  if(item.coverage_info == "ne" || item.coverage_info === undefined)
     item.problem = true;
 
   if(item.radius == "ne" || item.radius === undefined)
