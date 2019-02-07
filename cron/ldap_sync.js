@@ -5,6 +5,7 @@ const secrets = require('../config/secrets.js');
 const config = require('../config/config.js');
 const ldap2date = require('ldap2date');
 const data_export = require('./export.js');
+const exec = require('child_process').exec;
 // --------------------------------------------------------------------------------------
 var exp = {}
 // --------------------------------------------------------------------------------------
@@ -61,7 +62,6 @@ exp.search_and_update_realms = function (client, database, search_base, callback
         dict.managers.push(entry.object['manager'].toLowerCase());
 
       dict.testing_id = Boolean(entry.object['eduroamTestingId']);
-      dict.xml_url = Boolean(entry.object['labeledUri']);
 
       if(entry.object['oPointer'])
         dict.org_ptr = entry.object['oPointer'];
@@ -86,21 +86,46 @@ exp.search_and_update_realms = function (client, database, search_base, callback
     });
 
     res.on('end', function(result) {
-      search_radius_servers(client, ret, database, function() {
-        search_orgs(client, ret, database, function() {
-          search_managers(client, ret, database, function() {
-            update_realms(ret, database, search_base, function() {
-              client.unbind(function(err) {   // unbind after all search operations are done
-                assert.ifError(err);
-              });
+      update_coverage_info(ret, function() {
+        search_radius_servers(client, ret, database, function() {
+          search_orgs(client, ret, database, function() {
+            search_managers(client, ret, database, function() {
+              update_realms(ret, database, search_base, function() {
+                client.unbind(function(err) {   // unbind after all search operations are done
+                  assert.ifError(err);
+                });
 
-              if(callback)
-                callback();
+                if(callback)
+                  callback();
+              });
             });
           });
         });
       });
     });
+  });
+}
+// --------------------------------------------------------------------------------------
+// update coverage information
+// --------------------------------------------------------------------------------------
+function update_coverage_info(data, done)
+{
+  async.eachOfSeries(data, function(item, key, callback) {
+    exec("icingacli monitoring list services --format='$service_state$' --service INSTITUTION-JSON-" + item.realms[0], function (error, stdout, stderr) {
+      // output is the state of icinga check as string
+      var state = stdout[0];
+
+      if(state == 0)
+        data[key].coverage_info = true;
+      else
+        data[key].coverage_info = false;
+
+      callback();
+    });
+  }, function(err) {
+    if(err)
+      console.log(err);
+    done();
   });
 }
 // --------------------------------------------------------------------------------------

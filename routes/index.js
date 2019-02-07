@@ -30,7 +30,7 @@ function get_inst_list(req, res)
                              register_timestamp : { $last : "$register_timestamp" },
                              connection_timestamp : { $last : "$connection_timestamp" },
                              type : { $last : "$type" },
-                             xml_url : { $last : "$xml_url" },
+                             coverage_info : { $last : "$coverage_info" },
                              radius : { $last : "$radius" },
                              org_name : { $last : "$org_name" },
                              org_active : { $last : "$org_active" },
