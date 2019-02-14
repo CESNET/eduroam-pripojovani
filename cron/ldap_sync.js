@@ -111,7 +111,7 @@ exp.search_and_update_realms = function (client, database, search_base, callback
 function update_coverage_info(data, done)
 {
   async.eachOfSeries(data, function(item, key, callback) {
-    exec("icingacli monitoring list services --format='$service_state$' --service INSTITUTION-JSON-" + item.realms[0], function (error, stdout, stderr) {
+    exec("icingacli monitoring list services --format='$service_state$' --service COVERAGE-INFO-" + item.realms[0], function (error, stdout, stderr) {
       // output is the state of icinga check as string
       var state = stdout[0];
 
