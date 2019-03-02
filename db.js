@@ -13,7 +13,7 @@ var realms_schema = mongoose.Schema({
   connection_timestamp : Date,
   connection_status : String,
   radius : Boolean,
-  xml_url : Boolean,
+  coverage_info : Boolean,
   last_change : Date,
   appointment : Date,
   org_name : String,
