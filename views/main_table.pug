@@ -64,8 +64,8 @@ table.table.striped.hovered
       td(ng-if='row.testing_id == "n/a"' data-balloon="Testovací uživatel není vyžadován." data-balloon-pos="right") {{row.testing_id}}
       td.red_color(ng-if='row.testing_id == "ne"') {{row.testing_id}}
 
-      td(ng-if='row.xml_url == "ano"') {{row.xml_url}}
-      td.red_color(ng-if='row.xml_url != "ano"') {{row.xml_url}}
+      td(ng-if='row.coverage_info == "ano"') {{row.coverage_info}}
+      td.red_color(ng-if='row.coverage_info != "ano"') {{row.coverage_info}}
 
       td(ng-if='row.radius == "ano"') {{row.radius}}
       td.red_color(ng-if='row.radius != "ano"') {{row.radius}}
