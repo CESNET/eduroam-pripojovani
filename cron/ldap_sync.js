@@ -217,7 +217,7 @@ function delete_realm(database, name, callback)
 // --------------------------------------------------------------------------------------
 function compare_records(a, b, database)
 {
-  var items = [ "connection_status", "connection_timestamp", "radius", "register_timestamp", "testing_id", "type", "xml_url", "org_active", "appointment", "org_name" ]
+  var items = [ "connection_status", "connection_timestamp", "radius", "register_timestamp", "testing_id", "type", "coverage_info", "org_active", "appointment", "org_name" ]
 
   // check if connection status changed to connected
   if(a[items[0]] != b[items[0]] && b[items[0]] == "connected")
