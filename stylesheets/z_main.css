@@ -1,6 +1,7 @@
 .main {
   border-top: 12px solid #00658d;
   padding-bottom:320px;
+  background-color:#fff;
 }
 
 p {
@@ -33,3 +34,37 @@ h3 {
     min-height:100%;
     position:relative;
 }
+
+#cesnet_linker_placeholder {
+  min-height: 45px;
+  background-color: #4B4D4A;
+}
+
+#cesnet_linker_placeholder noscript {
+  display: block;
+  padding: 0 1em;
+  line-height: 44px;
+  border-bottom: 1px solid #999999;
+  color: #E1E5E9;
+}
+
+#cesnet_linker_placeholder noscript a {
+  color: #E1E5E9;
+  text-decoration: underline;
+}
+
+#cesnet_linker_placeholder noscript a:hover {
+  text-decoration: none;
+}
+
+#cesnet_linker_placeholder noscript .cl_actions {
+  float: right;
+  margin-left: 1em;
+}
+
+#cesnet_linker_placeholder noscript .cl_actions a {
+  display: inline;
+  padding: 5px;
+  text-decoration: none;
+}
+
