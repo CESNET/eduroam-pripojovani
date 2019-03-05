@@ -106,12 +106,12 @@ block content
           td Informace o pokrytí
 
           td.bg-green(ng-if='data[0].coverage_info == "ano"') {{data[0].coverage_info}}
-          td(ng-if='data[0].coverage_info == "ano"') Informace o pokrytí jsou dostupné.
+          td(ng-if='data[0].coverage_info == "ano"') Informace o pokrytí jsou dostupné. Informace o pokrytí jsou vytvářeny a editovány v aplikaci #[a(href="https://pokryti.eduroam.cz/{{data[0].realms[0]}}") pokryti.eduroam.cz].
 
           td.bg-lightRed(ng-if='data[0].coverage_info != "ano" && data.length > 0') {{data[0].coverage_info}}
           td.bg-lightRed(ng-if='data[0].coverage_info != "ano" && data.length == 0') ne
 
-          td(ng-if='data[0].coverage_info != "ano"') Informace o pokrytí nejsou dostupné. Informace o pokrytí jsou vytvářeny a editovány v aplikaci #[a(href="https://pokryti.eduroam.cz/") pokryti.eduroam.cz].
+          td(ng-if='data[0].coverage_info != "ano"') Informace o pokrytí nejsou dostupné. Informace o pokrytí jsou vytvářeny a editovány v aplikaci #[a(href="https://pokryti.eduroam.cz/{{data[0].realms[0]}}") pokryti.eduroam.cz].
 
           td
             a(href="https://www.eduroam.cz/cs/spravce/edudb2/uvod") Dokumentace k pokrytí
