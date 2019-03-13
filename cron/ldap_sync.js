@@ -1,4 +1,5 @@
 const ldap = require('ldapjs');
+const fs = require('fs');
 const async = require('async');
 const assert = require('assert');
 const secrets = require('../config/secrets.js');
@@ -112,13 +113,25 @@ function update_coverage_info(data, done)
 {
   async.eachOfSeries(data, function(item, key, callback) {
     exec("icingacli monitoring list services --format='$service_state$' --service COVERAGE-INFO-" + item.realms[0], function (error, stdout, stderr) {
-      // output is the state of icinga check as string
-      var state = stdout[0];
+      data[key].coverage_info = false;
 
-      if(state == 0)
-        data[key].coverage_info = true;
-      else
-        data[key].coverage_info = false;
+      // if there is output, the service exists
+      if(stdout) {
+        // output is the state of icinga check as string
+        var state = stdout[0];
+
+        if(state == 0)
+          data[key].coverage_info = true;
+      }
+      else {        // no stdout, the service does not exist
+        // get org name from coverage service config
+        delete require.cache[require.resolve('/home/eduroamdb/eduroam-db/web/coverage/config/realm_to_inst.js')]
+        const inst_mapping = require('/home/eduroamdb/eduroam-db/web/coverage/config/realm_to_inst.js')
+
+        // check if the coverage info file exists
+        if(item.realms[0] in inst_mapping && fs.existsSync('/home/eduroamdb/eduroam-db/web/coverage/coverage_files/' + inst_mapping[item.realms[0]] + '.json'))
+          data[key].coverage_info = true;
+      }
 
       callback();
     });
