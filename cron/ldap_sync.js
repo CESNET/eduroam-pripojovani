@@ -112,29 +112,37 @@ exp.search_and_update_realms = function (client, database, search_base, callback
 function update_coverage_info(data, done)
 {
   async.eachOfSeries(data, function(item, key, callback) {
-    exec("icingacli monitoring list services --format='$service_state$' --service COVERAGE-INFO-" + item.realms[0], function (error, stdout, stderr) {
-      data[key].coverage_info = false;
+    data[key].coverage_info = false;        // initially set to false
 
-      // if there is output, the service exists
-      if(stdout) {
-        // output is the state of icinga check as string
-        var state = stdout[0];
+    // get org name from coverage service config
+    delete require.cache[require.resolve('/home/eduroamdb/eduroam-db/web/coverage/config/realm_to_inst.js')]
+    const inst_mapping = require('/home/eduroamdb/eduroam-db/web/coverage/config/realm_to_inst.js')
 
-        if(state == 0)
-          data[key].coverage_info = true;
-      }
-      else {        // no stdout, the service does not exist
-        // get org name from coverage service config
-        delete require.cache[require.resolve('/home/eduroamdb/eduroam-db/web/coverage/config/realm_to_inst.js')]
-        const inst_mapping = require('/home/eduroamdb/eduroam-db/web/coverage/config/realm_to_inst.js')
-
-        // check if the coverage info file exists
-        if(item.realms[0] in inst_mapping && fs.existsSync('/home/eduroamdb/eduroam-db/web/coverage/coverage_files/' + inst_mapping[item.realms[0]] + '.json'))
-          data[key].coverage_info = true;
-      }
-
+    // check if the coverage info file exists
+    if(item.realms[0] in inst_mapping && fs.existsSync('/home/eduroamdb/eduroam-db/web/coverage/coverage_files/' + inst_mapping[item.realms[0]] + '.json')) {
+      data[key].coverage_info = true;
       callback();
-    });
+    }
+
+    if(!data[key].coverage_info) {       // no coverage info file exists
+      exec("icingacli monitoring list services --format='$service_state$' --service COVERAGE-INFO-" + item.realms[0], function (error, stdout, stderr) {
+        data[key].coverage_info = false;
+
+        // if there is output, the service exists
+        if(stdout) {
+          // output is the state of icinga check as string
+          var state = stdout[0];
+
+          if(state == 0)
+            data[key].coverage_info = true;
+        }
+        else {        // no stdout, the service does not exist
+          // nothing to do here, data[key].coverage_info still set to false
+        }
+
+        callback();
+      });
+    }
   }, function(err) {
     if(err)
       console.log(err);
