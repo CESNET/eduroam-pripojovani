@@ -442,6 +442,7 @@ function search_orgs(client, data, database, done)
 
         res.on('error', function(err) {
           console.error('error: ' + err.message);
+          callback();
         });
 
         res.on('end', function(result) {
