@@ -21,7 +21,7 @@
     "ldapjs": "^1.0.2",
     "mongoose": "^5.7.5",
     "morgan": "^1.9.1",
-    "pug": "^2.0.4",
+    "pug": "^3.0.1",
     "serve-favicon": "~2.4.5",
     "streamqueue": "^1.1.2"
   }
