@@ -1,3 +1,5 @@
+**This repository is archived, because the code contained is EOL.**
+
 # About
 This application is intended for displaying connection status of organizations from czech eduroam insfrastructure. 
 It is accessible at [https://pripojovani.eduroam.cz](https://pripojovani.eduroam.cz).
